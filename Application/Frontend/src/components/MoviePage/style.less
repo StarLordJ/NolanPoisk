@@ -1,0 +1,75 @@
+:local {
+    .container, .trailer, .reviewsContainer, .formContainer {
+        margin: 0 auto;
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    .trailer, .reviewsContainer, .formContainer {
+        flex-direction: column;
+    }
+
+    .trailer {
+        align-items: center;
+    }
+
+    .movieInfo {
+        display: flex;
+        flex-direction: column;
+        width: 800px;
+        align-content: space-between;
+    }
+
+    .hr {
+        background-color: #e0f2f1;
+        height: 1px;
+        border: none;
+        margin-bottom: 5px;
+    }
+
+    .itemDescription {
+        color: #b48484;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .form {
+        width: 800px;
+    }
+
+    .textarea {
+        box-sizing: border-box;
+        width: 880px;
+        height: 50px;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+    }
+
+    .textarea:focus, .button:active, .button:focus {
+        outline: none;
+        border: 2px solid #e1e1e1;
+    }
+
+    .button {
+        background: #e0f2f1;
+        width: 100px;
+        height: 30px;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+    }
+
+    .reviewItem {
+        border: 1px solid #e5e5e5;
+        background-color: #f8f8f8;
+        border-radius: 10px;
+        width: 800px;
+        padding: 40px;
+        margin-bottom: 10px;
+    }
+
+    .reviewItem > div {
+        margin-bottom: 10px;
+    }
+}

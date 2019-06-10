@@ -4,7 +4,8 @@
   "description": "Учебный проект",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "pushd Application/Backend && npm run build:server && npm start:server && popd"
   },
   "author": "Semyon Boyarnikov",
   "license": "ISC"

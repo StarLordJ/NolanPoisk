@@ -1,0 +1,1 @@
+require("./distr/start.js");
