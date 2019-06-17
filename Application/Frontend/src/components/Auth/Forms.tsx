@@ -23,7 +23,7 @@ export class RegistrationForm extends React.Component<Props, State> {
             <Modal>
                 <div className={styles.RegistrationForm}>
                     <form className={styles.form} onSubmit={this.handleSubmit}>
-                        <h1 onClick={this.props.onClick}>{this.props.isRegisration ? "Регистрация" : "Авторизация"}</h1>
+                        <h1>{this.props.isRegisration ? "Регистрация" : "Авторизация"}</h1>
                         <div className={styles.formFields}>
                             {this.props.isRegisration && <input onChange={this.handleName} value={this.state.name} className={styles.input} type="text" placeholder="Имя" required></input>}
                             <input onChange={this.handleEmail} value={this.state.email} className={styles.input} type="email" placeholder="Email" required></input>
@@ -47,8 +47,11 @@ export class RegistrationForm extends React.Component<Props, State> {
 
         if (this.props.isRegisration) {
             await registerUser(name, email, password);
+            await authorizeUser(email, password);
         } else {
             await authorizeUser(email, password);
         }
+
+        await this.props.onClick();
     }
 }

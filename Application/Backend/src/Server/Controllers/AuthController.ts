@@ -4,6 +4,10 @@ import passport from "passport";
 import Strategy from "passport-local";
 import path from "path";
 import session from "express-session";
+import bcrypt from "bcrypt-nodejs"
+import { Strategy as JWTStrategy, ExtractJwt as ExtactJWT } from "passport-jwt";
+import { jwtConfig } from "./Utils/jwtconfig";
+import jwt from "jsonwebtoken";
 
 const LocalStrategy = Strategy.Strategy;
 
@@ -24,9 +28,7 @@ export class AuthController {
         this.setUpPassportMiddleWares();
         const pat = __dirname.split("Backend")[0];
         expressApplication.use(express.static(path.join(pat, "Frontend/distr")));
-        expressApplication.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
         expressApplication.use(this.passport.initialize());
-        expressApplication.use(this.passport.session());
 
         this.setExpressRouting(expressApplication);
     };
@@ -34,29 +36,42 @@ export class AuthController {
     private async findUserByNameAndCheck(email: string, password: string, done: (err: any, user?: any, info?: any) => void): Promise<void> {
         try {
             const user = await this.storage.searchConsumer(email);
-            console.log(user)
+
             if (user) {
-                if (user.password === password) {
-                    return done(null, { email })
+                const compareResult = bcrypt.compareSync(password, user.password);
+
+                if (compareResult === true) {
+                    console.log("Пользователь авторизован");
+                    return done(null, { email });
+                } else {
+                    console.log("Пароли не сопадают!");
+                    return done(null, false, { message: "Пароли не совпадают" });
                 }
             }
-            return done(null, false);
+            console.log("Пользователь с таким email не зарегистрирован!");
+            return done(null, false, { message: "Пользователь с таким email не зарегистрирован!" });
         } catch (e) {
-            return done(e);
+            done(e);
         }
     }
 
-    private async registerUserAndLogin(req: Request, email: string, password: string, done: (err: any, user?: any, info?: any) => void): Promise<void> {
+    private async registerUser(req: Request, email: string, password: string, done: (err: any, user?: any, info?: any) => void): Promise<void> {
         try {
             const user = await this.storage.searchConsumer(email);
 
             if (user) {
-                return done(null, false);
+                console.log("Этот email уже использовался при регистрации!");
+                return done(null, false, { message: "Этот email уже использовался при регистрации!" });
             }
-            let newUser = { name: req.body.name, email: email, password: password, privilege: false };
+
+            const passwordHashed = bcrypt.hashSync(password);
+
+            let newUser = { username: req.body.name, email: email, password: passwordHashed, privilege: false };
 
             try {
                 await this.storage.registerUser(newUser);
+                console.log("Пользователь создан!");
+
                 return done(null, { email });
 
             } catch (er) {
@@ -64,23 +79,49 @@ export class AuthController {
             }
 
         } catch (e) {
-            return done(e)
+            done(e)
+        }
+    }
+
+    private async authByToken(jwtPayload: { id: string }, done: (err: any, user?: any, info?: any) => void): Promise<void> {
+        console.log(jwtPayload)
+        try {
+            const user = await this.storage.searchConsumer(jwtPayload.id);
+
+            if (user) {
+                console.log("Пользователь найден по токену в базе данных и он авторизован значит быть должен!");
+                done(null, { email: user.email });
+            } else {
+                console.log("Пользователь не найден в базе данных");
+                done(null, false);
+            }
+        } catch (e) {
+            done(e);
         }
     }
 
     private setUpPassportMiddleWares(): void {
+        const opts = {
+            jwtFromRequest: ExtactJWT.fromAuthHeaderWithScheme("JWT"),
+            secretOrKey: jwtConfig.secret
+        }
 
         this.passport.use("login", new LocalStrategy({
             usernameField: "email",
             passwordField: "password",
+            session: false,
         }, async (email, password, done): Promise<void> => await this.findUserByNameAndCheck(email, password, done)));
 
         this.passport.use("register", new LocalStrategy({
             usernameField: "email",
             passwordField: "password",
             passReqToCallback: true,
-        }, async (req, email, password, done): Promise<void> => await this.registerUserAndLogin(req, email, password, done)));
+        }, async (req, email, password, done): Promise<void> => await this.registerUser(req, email, password, done)));
 
+        this.passport.use("jwt", new JWTStrategy(opts, async (jwtPayload, done): Promise<void> => {
+            console.log("Gsf")
+            return await this.authByToken(jwtPayload, done)
+        }));
 
         this.passport.serializeUser((user: UserSession, done): void => {
             done(null, user.email);
@@ -93,30 +134,60 @@ export class AuthController {
 
 
     private setExpressRouting(expressApplication: Express): void {
-        expressApplication.post("/api/login", this.passport.authenticate('login', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        }))
-
-        expressApplication.post("/api/register", this.passport.authenticate('register', {
-            successRedirect: '/',
-            failureRedirect: '/register'
-        }))
-
-        expressApplication.get("/login", (req, res) => {
-            console.log(req.session, "onLogin")
-            res.json("ONLOGIN!")
-        })
-
-        expressApplication.get("/register", (req, res) => {
-            console.log(req.session, "onLogin")
-            res.json("ONREGISTER!!")
-        })
-
-        expressApplication.get('/logout', function (req, res) {
-            req.logout();
-            res.redirect('/');
+        expressApplication.post("/api/login", (req, res, next): void => {
+            this.passport.authenticate('login', (err: Error, user: { email: string }, info?: { message: string }): void => {
+                if (err) {
+                    console.log(err);
+                }
+                if (info !== undefined) {
+                    console.log(info.message);
+                    res.send(info.message);
+                } else {
+                    req.logIn(user, async (err): Promise<void> => {
+                        const token = jwt.sign({ id: user.email }, jwtConfig.secret);
+                        console.log(token)
+                        const userFromDB = await this.storage.searchConsumer(user.email);
+                        res.status(200).send({
+                            auth: true,
+                            token: token,
+                            privelege: userFromDB.privilege,
+                            message: "Пользователь найден и авторизован",
+                        })
+                    })
+                }
+            })(req, res, next);
         });
+
+        expressApplication.post("/api/register", (req, res, next): void => {
+            this.passport.authenticate('register', (err: Error, user: { email: string }, info?: { message: string }): void => {
+                if (err) {
+                    console.log(err);
+                }
+                if (info !== undefined) {
+                    console.log(info.message);
+                    res.send(info.message);
+                } else {
+                    req.logIn(user, (err): void => {
+                        res.status(200).send({ message: "Пользователь создан!" })
+                    })
+                }
+            })(req, res, next);
+        });
+
+        expressApplication.get("/api/check", (req, res, next): void => {
+            this.passport.authenticate("jwt", async (err: Error, user: { email: string }, info?: { message: string }): Promise<void> => {
+                if (err) {
+                    console.log(err);
+                }
+                if (info !== undefined) {
+                    console.log(info.message);
+                    res.send(info.message);
+                } else {
+                    const userFromDB = await this.storage.searchConsumer(user.email);
+                    res.status(200).send({ privilege: userFromDB.privilege, name: userFromDB.username, email: userFromDB.email })
+                }
+            })(req, res, next);
+        })
 
         expressApplication.get('*', (request, response): void => {
             const pat = __dirname.split("Backend")[0];

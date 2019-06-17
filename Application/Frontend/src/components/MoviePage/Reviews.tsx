@@ -1,9 +1,11 @@
 import * as React from "react";
 import { Review, ReviewItem } from "./ReviewItem";
 import { getMovieReviews } from "../../Api/Api"
+import { User } from 'index';
 
 interface Props {
     movie: string;
+    user: User;
 }
 
 interface State {
@@ -22,6 +24,6 @@ export class Reviews extends React.Component<Props, State> {
     public render() {
         const { reviews } = this.state;
 
-        return Boolean(reviews.length) ? reviews.map(review => <ReviewItem review={review} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
+        return Boolean(reviews.length) ? reviews.map(review => <ReviewItem user={this.props.user} review={review} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
     }
 }

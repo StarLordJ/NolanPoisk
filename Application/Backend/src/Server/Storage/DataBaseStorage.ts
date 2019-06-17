@@ -21,6 +21,7 @@ export interface MovieFullInfo {
 
 export interface MovieReview {
     author: string;
+    authorEmail: string;
     date: Date;
     text: string;
     isApproved: boolean;
@@ -32,6 +33,7 @@ interface DBReview {
     username: string;
     review: string;
     "is_approved": boolean;
+    email: string;
 }
 
 interface DataBaseMovie {
@@ -95,11 +97,18 @@ export class DataBaseStorage {
         return response.rows.map((reviewInfo: DBReview): MovieReview => {
             return {
                 author: reviewInfo.username,
+                authorEmail: reviewInfo.email,
                 text: reviewInfo.review,
                 date: reviewInfo.date,
                 isApproved: reviewInfo.is_approved,
             }
         });
+    }
+
+    public async setReview(movie: string, text: string, username: string, userEmail: string): Promise<void> {
+        const queryString = `INSERT INTO "public"."Reviews" VALUES ('${movie}', '${username}', '${text}', FALSE, '${(new Date).toISOString()}', '${userEmail}')`
+
+        await this.client.query(queryString);
     }
 
 }

@@ -29,7 +29,7 @@ export class MovieItem extends React.Component<Props> {
                     <div>{movie.genre.join(", ")}</div>
                     <div>{movie.year}</div>
                     <div>{movie.shortDescription}</div>
-                    <Link to={`/movie/${movie.name}`} target="_blank">Открыть страницу с фильмом</Link>
+                    <Link to={`/movie/${movie.name}`}>Открыть страницу с фильмом</Link>
                 </div>
             </div>
         )

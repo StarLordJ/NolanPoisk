@@ -2,6 +2,7 @@ import * as React from "react";
 import { Reviews } from "./Reviews";
 import { ReviewForm } from "./ReviewForm";
 import { getMovieInfo } from "../../Api/Api";
+import { User } from "../../index";
 
 import styles from "./style.less";
 
@@ -21,7 +22,8 @@ interface Props {
         params: {
             name: string;
         };
-    }
+    },
+    user: User | null;
 }
 
 interface State {
@@ -35,14 +37,6 @@ export class MoviePage extends React.Component<Props> {
     public async componentDidMount(): Promise<void> {
         const response = await getMovieInfo(this.props.match.params.name);
         this.setState({ movie: response });
-    }
-
-    private renderCastList(cast: string[]): JSX.Element {
-        return (
-            <ul className={styles.castList}>
-                {cast.map(name => <li>{name}</li>)}
-            </ul>
-        )
     }
 
     render() {
@@ -80,10 +74,10 @@ export class MoviePage extends React.Component<Props> {
                     </iframe>
                 </div>
                 <div className={styles.formContainer}>
-                    <ReviewForm isAutorised={true} movie={movie.name} />
+                    <ReviewForm user={this.props.user} movie={movie.name} />
                 </div>
                 <div className={styles.reviewsContainer}>
-                    <Reviews movie={movie.name} />
+                    <Reviews user={this.props.user} movie={movie.name} />
                 </div>
             </React.Fragment>
         )

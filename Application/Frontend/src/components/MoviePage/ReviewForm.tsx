@@ -2,10 +2,12 @@ import * as React from "react";
 import { sendFilmReview } from "../../Api/Api"
 
 import styles from "./style.less";
+import { User } from 'index';
 
 interface Props {
     isAutorised: boolean;
     movie: string;
+    user: User;
 }
 
 interface State {
@@ -22,11 +24,13 @@ export class ReviewForm extends React.Component<Props, State> {
 
     public handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        await sendFilmReview(this.props.movie, this.state.value);
+        await sendFilmReview(this.props.user, this.props.movie, this.state.value);
     }
 
     render() {
-        return this.props.isAutorised ? (
+        const { user } = this.props;
+
+        return !user ? null : user.name && user.email ? (
             <form onSubmit={this.handleSubmit} className={styles.form}>
                 <textarea className={styles.textarea} value={this.state.value} onChange={this.handleChange} />
                 <button className={styles.button} type="submit">Отправить</button>
