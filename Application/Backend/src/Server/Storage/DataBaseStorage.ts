@@ -44,6 +44,8 @@ interface DataBaseMovie {
     genre: string[];
     year: number;
     "actor_cast": string[];
+    "marks_count": number;
+    rating: number;
 }
 
 interface MovieMedia {
@@ -106,7 +108,49 @@ export class DataBaseStorage {
     }
 
     public async setReview(movie: string, text: string, username: string, userEmail: string): Promise<void> {
-        const queryString = `INSERT INTO "public"."Reviews" VALUES ('${movie}', '${username}', '${text}', FALSE, '${(new Date).toISOString()}', '${userEmail}')`
+        const queryString = `INSERT INTO "public"."Reviews" VALUES ('${movie}', '${username}', '${text}', FALSE, '${(new Date).toISOString()}', '${userEmail}')`;
+
+        await this.client.query(queryString);
+    }
+
+    public async updateReview(movie: string, text: string, username: string, userEmail: string): Promise<void> {
+        const queryString = `UPDATE "public"."Reviews" SET review = '${text}', date='${(new Date).toISOString()}' WHERE name='${movie}' AND email='${userEmail}'`;
+
+        await this.client.query(queryString);
+    }
+
+    public async deleteReview(movie: string, email: string): Promise<void> {
+        const queryString = `DELETE FROM "public"."Reviews" WHERE name='${movie}' AND email='${email}'`;
+        await this.client.query(queryString);
+    }
+
+    public async getMovieRatingOfUser(movie: string, email: string): Promise<number> {
+        const queryString = `SELECT * FROM "public"."Assessments" WHERE name='${movie}' AND user_email='${email}'`;
+        const response = await this.client.query(queryString);
+
+        return response.rows[0] ? response.rows[0].mark : 0;
+    }
+
+    public async getMovieRating(movie: string): Promise<{ rating: number; count: number }> {
+        const queryString = `SELECT rating, marks_count FROM "public"."Movies" WHERE name='${movie}'`;
+        const response = await this.client.query(queryString);
+        const d = response.rows[0];
+
+        return {
+            rating: d.rating,
+            count: d.marks_count
+        }
+    }
+
+    public async setUserRating(rate: string, movie: string, email: string): Promise<void> {
+        const queryString = `INSERT INTO "public"."Assessments" VALUES ('${movie}', ${rate}, '${email}', '${movie + email}')
+        ON CONFLICT (movie_user) DO UPDATE SET mark='${rate}', name='${movie}' WHERE "public"."Assessments".movie_user='${movie + email}'`;
+
+        await this.client.query(queryString);
+    }
+
+    public async deleteUserRating(movie: string, email: string): Promise<void> {
+        const queryString = `DELETE FROM "public"."Assessments" WHERE name='${movie}' AND user_email='${email}'`;
 
         await this.client.query(queryString);
     }

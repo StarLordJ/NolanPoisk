@@ -32,8 +32,37 @@ export class ApiController {
         return await this.storage.getMovieReviews(movie);
     }
 
-    @httpPost("/api/review", httpReturn.Void, httpBodyParam("movie", httpType.String), httpBodyParam("text", httpType.String), httpBodyParam("username", httpType.String), httpBodyParam("email", httpType.String))
-    public async setReview(movie: string, text: string, userName: string, userEmail: string): Promise<void> {
-        await this.storage.setReview(movie, text, userName, userEmail)
+    @httpPost("/api/review", httpReturn.Void, httpBodyParam("movie", httpType.String), httpBodyParam("text", httpType.String), httpBodyParam("username", httpType.String), httpBodyParam("email", httpType.String), httpBodyParam("isEditing", httpType.Boolean))
+    public async setReview(movie: string, text: string, userName: string, userEmail: string, isEditing: boolean): Promise<void> {
+        if (isEditing) {
+            await this.storage.updateReview(movie, text, userName, userEmail);
+        } else {
+            await this.storage.setReview(movie, text, userName, userEmail);
+        }
+    }
+
+    @httpPost("/api/deleteReview", httpReturn.Void, httpBodyParam("movie", httpType.String), httpBodyParam("email", httpType.String))
+    public async deleteReview(movie: string, email: string): Promise<void> {
+        await this.storage.deleteReview(movie, email);
+    }
+
+    @httpGet("/api/rating", httpReturn.Json, httpQueryUrlParam("name", httpType.String), httpQueryUrlParam("email", httpType.String))
+    public async getMovieRatingOfUser(movie: string, email: string): Promise<number> {
+        return await this.storage.getMovieRatingOfUser(movie, email);
+    }
+
+    @httpGet("/api/ratingOf", httpReturn.Json, httpQueryUrlParam("name", httpType.String))
+    public async getMovieRating(movie: string): Promise<{ rating: number; count: number }> {
+        return await this.storage.getMovieRating(movie);
+    }
+
+    @httpPost("/api/rating", httpReturn.Void, httpBodyParam("rate", httpType.String), httpBodyParam("movie", httpType.String), httpBodyParam("email", httpType.String))
+    public async setUserRating(rate: string, movie: string, email: string): Promise<void> {
+        await this.storage.setUserRating(rate, movie, email);
+    }
+
+    @httpPost("/api/deleteUserRating", httpReturn.Void, httpBodyParam("movie", httpType.String), httpBodyParam("email", httpType.String))
+    public async deleteUserRating(movie: string, email: string): Promise<void> {
+        await this.storage.deleteUserRating(movie, email);
     }
 }

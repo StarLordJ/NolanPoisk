@@ -5,6 +5,7 @@ import { getMovieInfo } from "../../Api/Api";
 import { User } from "../../index";
 
 import styles from "./style.less";
+import { Raiting } from './Raiting';
 
 export interface Movie {
     name: string;
@@ -47,7 +48,7 @@ export class MoviePage extends React.Component<Props> {
                 <div className={styles.container}>
                     <img src={movie.posterUrl} alt={movie.name} />
                     <div className={styles.movieInfo}>
-                        <h1 style={{ marginBottom: "20px" }}>{movie.name}</h1>
+                        <h1 style={{ marginBottom: "10px" }}>{movie.name}</h1>
                         <div style={{ color: "#6c6c6c", marginBottom: "20px" }}>{movie.tagline}</div>
                         <div className={styles.itemDescription}>Жанр</div>
                         <div>{movie.genre.join(", ")}</div>
@@ -61,6 +62,11 @@ export class MoviePage extends React.Component<Props> {
                         <div className={styles.itemDescription}>Описание</div>
                         <div>{movie.description}</div>
                     </div>
+                </div>
+                <div className={styles.reviewsContainer}>
+                    <hr className={styles.hr} />
+                    <div className={styles.itemDescription}>Рейтинг</div>
+                    {this.props.user && <Raiting movie={movie.name} user={this.props.user} />}
                 </div>
                 <div className={styles.trailer}>
                     <h2 style={{ marginBottom: "20px" }}>Трейлер</h2>

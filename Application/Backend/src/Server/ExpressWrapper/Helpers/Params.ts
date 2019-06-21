@@ -37,6 +37,8 @@ export const httpType = {
     Number: (x: any): number => parseInt(x, 10),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     String: (x: any): string | undefined => (x == undefined ? undefined : `${x}`),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Boolean: (x: any): boolean => x,
 };
 
 

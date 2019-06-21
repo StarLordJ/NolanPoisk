@@ -5,9 +5,8 @@ import styles from "./style.less";
 import { User } from 'index';
 
 interface Props {
-    isAutorised: boolean;
     movie: string;
-    user: User;
+    user: User | null;
 }
 
 interface State {

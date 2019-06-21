@@ -30,12 +30,58 @@ export async function getMovieReviews(movie: string): Promise<Review[]> {
     }
 }
 
-export async function sendFilmReview(user: User, movie: string, text: string): Promise<void> {
+export async function getMovieRatingOfUser(movie: string, email: string): Promise<number> {
+    try {
+        const response = await axios.get(`/api/rating?name=${encodeURIComponent(movie)}&email=${encodeURIComponent(email)}`);
+        return response.data;
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
+export async function getMovieRating(movie: string): Promise<{ rating: number; count: number }> {
+    try {
+        const response = await axios.get(`api/ratingOf?name=${encodeURIComponent(movie)}`);
+        return response.data;
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
+export async function setUserRating(rate: number, movie: string, email: string): Promise<void> {
+    try {
+        await axios.post("/api/rating", { rate, movie, email })
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
+export async function deleteUserRating(movie: string, email: string): Promise<void> {
+    try {
+        await axios.post("api/deleteUserRating", { movie, email })
+    } catch (e) {
+        throw Error(e)
+    }
+}
+
+export async function sendFilmReview(user: User, movie: string, text: string, isEditing: boolean = false): Promise<void> {
     try {
         await axios.post("/api/review", {
             movie: movie,
             text: text,
             username: user.name,
+            email: user.email,
+            isEditing
+        })
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
+export async function deleteReview(movie: string, user: User): Promise<void> {
+    try {
+        await axios.post("/api/deleteReview", {
+            movie,
             email: user.email,
         })
     } catch (e) {

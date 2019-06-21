@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Review, ReviewItem } from "./ReviewItem";
-import { getMovieReviews } from "../../Api/Api"
+import { getMovieReviews, deleteReview } from "../../Api/Api"
 import { User } from 'index';
 
 interface Props {
     movie: string;
-    user: User;
+    user: User | null;
 }
 
 interface State {
@@ -21,9 +21,17 @@ export class Reviews extends React.Component<Props, State> {
         this.setState({ reviews });
     }
 
+    public updateReviews = async (user: User, movie: string): Promise<void> => {
+        await deleteReview(movie, user);
+
+        const reviews = await getMovieReviews(this.props.movie);
+
+        this.setState({ reviews });
+    }
+
     public render() {
         const { reviews } = this.state;
 
-        return Boolean(reviews.length) ? reviews.map(review => <ReviewItem user={this.props.user} review={review} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
+        return Boolean(reviews.length) ? reviews.map(review => <ReviewItem onClick={this.updateReviews} user={this.props.user} review={review} movie={this.props.movie} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
     }
 }
