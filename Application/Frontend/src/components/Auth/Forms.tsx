@@ -29,7 +29,7 @@ export class RegistrationForm extends React.Component<Props, State> {
                             <input onChange={this.handleEmail} value={this.state.email} className={styles.input} type="email" placeholder="Email" required></input>
                             <input onChange={this.handlePassword} value={this.state.password} className={styles.input} type="password" placeholder="Пароль" required></input>
                         </div>
-                        <button className={styles.button} type="submit">Поiхали!</button>
+                        <button className={styles.button} type="submit">{this.props.isRegisration ? "Зарегистрироваться" : "Авторизоваться"}</button>
                     </form>
                 </div>
             </Modal>

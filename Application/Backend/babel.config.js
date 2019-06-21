@@ -1,6 +1,7 @@
 module.exports = {
     test: ["**/*.ts"],
     presets: [
+        "@babel/preset-typescript",
         [
             "@babel/preset-env",
             {
@@ -10,7 +11,7 @@ module.exports = {
                 useBuiltIns: false,
                 shippedProposals: true,
             },
-        ], ["@babel/preset-typescript"],
+        ],
     ],
     plugins: [
         "@babel/plugin-syntax-object-rest-spread",

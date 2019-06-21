@@ -1,23 +1,24 @@
 import * as React from "react";
-import { sendFilmReview } from "../../Api/Api";
+import { updateMovieReview } from "../../Api/Api";
 import { User } from 'index';
 
 import styles from "./style.less";
 
 
 export interface Review {
-    author: string;
-    authorEmail: string;
+    username: string;
+    useremail: string;
     date: Date;
     text: string;
     isApproved: boolean;
+    id: number;
 }
 
 interface Props {
     review: Review;
     user: User | null;
     movie: string;
-    onClick: (user: User, movie: string) => Promise<void>;
+    onClick: (id: number) => Promise<void>;
 }
 
 export class ReviewItem extends React.Component<Props> {
@@ -39,19 +40,19 @@ export class ReviewItem extends React.Component<Props> {
     private renderEditButton = (): JSX.Element | null => {
         const { user, review } = this.props;
 
-        if (!user || user.email !== review.authorEmail) return null;
+        if (!user || user.email !== review.useremail) return null;
 
         return <div onClick={this.editText} className={styles.pencil}>✎</div>
     }
 
     private handleClick = async (): Promise<void> => {
-        await this.props.onClick(this.props.user, this.props.movie);
+        await this.props.onClick(this.props.review.id);
     }
 
     private renderRemoveButton = (): JSX.Element | null => {
         const { user = {}, review } = this.props;
 
-        if (user.email === review.authorEmail || user.privilege) {
+        if (user.email === review.useremail || user.privilege) {
             return <div onClick={this.handleClick} className={styles.deleteReview}>✖</div>
         }
 
@@ -61,7 +62,7 @@ export class ReviewItem extends React.Component<Props> {
     private renderReview = (): JSX.Element | null => {
         const { user, review } = this.props;
 
-        if (!user || !review.isApproved && user.email !== review.authorEmail && !user.privilege) {
+        if (!user || !review.isApproved && user.email !== review.useremail && !user.privilege) {
             return null;
         }
         return (
@@ -72,7 +73,7 @@ export class ReviewItem extends React.Component<Props> {
                             {this.renderEditButton()}
                             {this.renderRemoveButton()}
                         </div>
-                        <div>{review.author}</div>
+                        <div>{review.username}</div>
                         <div>{review.date}</div>
                         <div>{this.state.text}</div>
                     </React.Fragment> :
@@ -90,9 +91,7 @@ export class ReviewItem extends React.Component<Props> {
 
     private handleSubmit = async (e) => {
         e.preventDefault();
-        const { movie, user } = this.props;
-
-        await sendFilmReview(user, movie, this.state.text, true);
+        await updateMovieReview(this.props.review.id, this.state.text);
         this.setState({ isEditing: false });
     }
 }

@@ -32,7 +32,7 @@ export async function getMovieReviews(movie: string): Promise<Review[]> {
 
 export async function getMovieRatingOfUser(movie: string, email: string): Promise<number> {
     try {
-        const response = await axios.get(`/api/rating?name=${encodeURIComponent(movie)}&email=${encodeURIComponent(email)}`);
+        const response = await axios.get(`/api/userRating?name=${encodeURIComponent(movie)}&email=${encodeURIComponent(email)}`);
         return response.data;
     } catch (e) {
         throw Error(e);
@@ -41,7 +41,7 @@ export async function getMovieRatingOfUser(movie: string, email: string): Promis
 
 export async function getMovieRating(movie: string): Promise<{ rating: number; count: number }> {
     try {
-        const response = await axios.get(`api/ratingOf?name=${encodeURIComponent(movie)}`);
+        const response = await axios.get(`api/movieRating?name=${encodeURIComponent(movie)}`);
         return response.data;
     } catch (e) {
         throw Error(e);
@@ -50,7 +50,7 @@ export async function getMovieRating(movie: string): Promise<{ rating: number; c
 
 export async function setUserRating(rate: number, movie: string, email: string): Promise<void> {
     try {
-        await axios.post("/api/rating", { rate, movie, email })
+        await axios.post("/api/userRating/set", { rate, movie, email })
     } catch (e) {
         throw Error(e);
     }
@@ -58,32 +58,36 @@ export async function setUserRating(rate: number, movie: string, email: string):
 
 export async function deleteUserRating(movie: string, email: string): Promise<void> {
     try {
-        await axios.post("api/deleteUserRating", { movie, email })
+        await axios.post("api/userRating/delete", { movie, email })
     } catch (e) {
         throw Error(e)
     }
 }
 
-export async function sendFilmReview(user: User, movie: string, text: string, isEditing: boolean = false): Promise<void> {
+export async function sendMovieReview(user: User, movie: string, text: string): Promise<void> {
     try {
-        await axios.post("/api/review", {
+        await axios.post("/api/review/set", {
             movie: movie,
             text: text,
             username: user.name,
-            email: user.email,
-            isEditing
+            email: user.email
         })
     } catch (e) {
         throw Error(e);
     }
 }
 
-export async function deleteReview(movie: string, user: User): Promise<void> {
+export async function updateMovieReview(id: number, text: string): Promise<void> {
     try {
-        await axios.post("/api/deleteReview", {
-            movie,
-            email: user.email,
-        })
+        await axios.post("/api/review/update", { id, text });
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
+export async function deleteReview(id: number): Promise<void> {
+    try {
+        await axios.post("/api/review/delete", { id })
     } catch (e) {
         throw Error(e);
     }
@@ -115,7 +119,7 @@ export async function checkUserIsLogin(token: string): Promise<{
         const response = await axios.get("/api/check", {
             headers: { Authorization: `JWT ${token}` }
         });
-
+        console.log(response.data)
         return response.data;
     } catch (e) {
         throw Error(e);

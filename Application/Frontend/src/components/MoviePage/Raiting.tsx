@@ -49,7 +49,7 @@ export class Raiting extends React.Component {
         return (
             <div>
                 {
-                    this.props.user ?
+                    this.props.user.email ?
                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => <Star key={el} value={el} onClick={this.handleClick} color={el <= this.state.userRating} />) :
                         <div>Войдите или зарегистрируйтесь, чтобы ставить оценки</div>
                 }

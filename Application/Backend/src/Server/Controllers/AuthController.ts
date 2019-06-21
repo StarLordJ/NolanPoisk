@@ -184,7 +184,7 @@ export class AuthController {
                     res.send(info.message);
                 } else {
                     const userFromDB = await this.storage.searchConsumer(user.email);
-                    res.status(200).send({ privilege: userFromDB.privilege, name: userFromDB.username, email: userFromDB.email })
+                    res.status(200).send({ privilege: userFromDB.privilege, name: userFromDB.name, email: userFromDB.email })
                 }
             })(req, res, next);
         })

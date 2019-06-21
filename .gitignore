@@ -1,4 +1,2 @@
 node_modules
-distr/
-DataBaseUrl.txt
-jwtConfig.ts
+distr

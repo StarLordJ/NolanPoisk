@@ -4,8 +4,10 @@
   "description": "Учебный проект",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "pushd Application/Backend && npm run build:server && npm start:server && popd"
+    "build:front": "cd Application/Frontend && npm i && npm run build && cd ..",
+    "build:server": "cd Application/Backend && npm i && npm run build",
+    "build": "npm run build:front && npm run build:server",
+    "start": "cd Application/Backend && npm run start"
   },
   "author": "Semyon Boyarnikov",
   "license": "ISC"

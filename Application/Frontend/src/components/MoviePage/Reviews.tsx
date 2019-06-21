@@ -21,8 +21,8 @@ export class Reviews extends React.Component<Props, State> {
         this.setState({ reviews });
     }
 
-    public updateReviews = async (user: User, movie: string): Promise<void> => {
-        await deleteReview(movie, user);
+    public updateReviews = async (id: number): Promise<void> => {
+        await deleteReview(id);
 
         const reviews = await getMovieReviews(this.props.movie);
 

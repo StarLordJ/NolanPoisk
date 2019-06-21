@@ -1,5 +1,5 @@
 import * as React from "react";
-import { sendFilmReview } from "../../Api/Api"
+import { sendMovieReview } from "../../Api/Api"
 
 import styles from "./style.less";
 import { User } from 'index';
@@ -23,11 +23,12 @@ export class ReviewForm extends React.Component<Props, State> {
 
     public handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        await sendFilmReview(this.props.user, this.props.movie, this.state.value);
+        await sendMovieReview(this.props.user, this.props.movie, this.state.value);
     }
 
     render() {
         const { user } = this.props;
+        console.log(user)
 
         return !user ? null : user.name && user.email ? (
             <form onSubmit={this.handleSubmit} className={styles.form}>
