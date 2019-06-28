@@ -28,7 +28,6 @@ export class ReviewForm extends React.Component<Props, State> {
 
     render() {
         const { user } = this.props;
-        console.log(user)
 
         return !user ? null : user.name && user.email ? (
             <form onSubmit={this.handleSubmit} className={styles.form}>

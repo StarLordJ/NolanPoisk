@@ -119,7 +119,7 @@ export async function checkUserIsLogin(token: string): Promise<{
         const response = await axios.get("/api/check", {
             headers: { Authorization: `JWT ${token}` }
         });
-        console.log(response.data)
+
         return response.data;
     } catch (e) {
         throw Error(e);
