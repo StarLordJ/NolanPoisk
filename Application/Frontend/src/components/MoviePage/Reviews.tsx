@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Review, ReviewItem } from "./ReviewItem";
-import { getMovieReviews, deleteReview } from "../../Api/Api"
+import { getMovieReviews, deleteReview } from "../../Api/ApiClient"
 import { User } from 'index';
 
 interface Props {

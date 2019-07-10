@@ -1,6 +1,5 @@
 import * as React from "react";
 import { RegistrationForm } from "../Auth/Forms";
-import { logOutUser } from "../../Api/Api";
 import { Link } from "react-router-dom";
 
 import styles from "./style.less"

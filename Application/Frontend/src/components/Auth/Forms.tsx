@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Modal } from "./Modal";
-import { authorizeUser, registerUser } from "../../Api/Api";
+import { authorizeUser, registerUser } from "../../Api/ApiClient";
 
 import styles from "./style.less"
 

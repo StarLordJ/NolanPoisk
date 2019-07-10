@@ -151,6 +151,7 @@ export class AuthController {
                             auth: true,
                             token: token,
                             privelege: userFromDB.privilege,
+                            name: userFromDB.username,
                             message: "Пользователь найден и авторизован",
                         })
                     })

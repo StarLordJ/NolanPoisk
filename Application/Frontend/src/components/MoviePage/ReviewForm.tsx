@@ -1,5 +1,5 @@
 import * as React from "react";
-import { sendMovieReview } from "../../Api/Api"
+import { sendMovieReview } from "../../Api/ApiClient"
 
 import styles from "./style.less";
 import { User } from 'index';

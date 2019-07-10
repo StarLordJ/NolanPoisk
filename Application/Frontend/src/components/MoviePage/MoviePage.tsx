@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Reviews } from "./Reviews";
 import { ReviewForm } from "./ReviewForm";
-import { getMovieInfo } from "../../Api/Api";
+import { getMovieInfo } from "../../Api/ApiClient";
 import { User } from "../../index";
 
 import styles from "./style.less";

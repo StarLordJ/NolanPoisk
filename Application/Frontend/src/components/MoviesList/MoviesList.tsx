@@ -1,6 +1,6 @@
 import React from "react";
 import { MovieItem, Movie } from "../MovieItem/MovieItem";
-import { getAllMovies } from "../../Api/Api";
+import { getAllMovies } from "../../Api/ApiClient";
 
 import styles from "./style.less";
 

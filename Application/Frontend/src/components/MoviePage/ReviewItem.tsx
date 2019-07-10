@@ -1,5 +1,5 @@
 import * as React from "react";
-import { updateMovieReview } from "../../Api/Api";
+import { updateMovieReview } from "../../Api/ApiClient";
 import { User } from 'index';
 
 import styles from "./style.less";

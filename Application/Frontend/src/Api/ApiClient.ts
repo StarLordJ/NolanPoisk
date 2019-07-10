@@ -1,7 +1,7 @@
 import { Movie } from "components/MovieItem/MovieItem";
 import { Review } from "components/MoviePage/ReviewItem"
-import axios, {AxiosRequestConfig } from "axios";
-import { User } from 'index';
+import axios, { AxiosRequestConfig } from "axios";
+import { User } from 'components/App/App';
 
 interface QueryParams {
     [key: string]: string;
@@ -13,30 +13,24 @@ interface QueryOptions {
 }
 
 export class ApiClient {
-    private _user: User;
-
     public getAllMovies = async (): Promise<Movie[]> => {
         return await this.get<Movie[]>("/api/movies");
     };
 
-    public set user(user: User) {
-        this._user = user;
-    }
-
     public getMovieInfo = async (movie: string): Promise<Movie> => {
-        return await this.get<Movie>("/api/movies", { params: { name: movie }});
+        return await this.get<Movie>("/api/movies", { params: { name: movie } });
     };
 
     public getMovieReviews = async (movie: string): Promise<Review[]> => {
-        return await this.get<Review[]>("/api/review", { params: { name: movie }});
+        return await this.get<Review[]>("/api/review", { params: { name: movie } });
     };
 
     public getMovieRatingOfUser = async (movie: string, email: string): Promise<number> => {
-        return await this.get<number>("/api/userRating", { params: { name: movie, email }});
+        return await this.get<number>("/api/userRating", { params: { name: movie, email } });
     };
 
     public getMovieRating = async (movie: string): Promise<{ rating: number; count: number }> => {
-        return await this.get<{ rating: number; count: number }>("/api/movieRating", { params: { name: movie }});
+        return await this.get<{ rating: number; count: number }>("/api/movieRating", { params: { name: movie } });
     };
 
     public setUserRating = async (mark: number, movie: string, email: string): Promise<void> => {
@@ -64,9 +58,11 @@ export class ApiClient {
         await this.post("/api/review/delete", { id });
     };
 
-    public authorizeUser = async (email: string, password: string): Promise<void> => {
+    public authorizeUser = async (email: string, password: string): Promise<User> => {
         const response = await this.post("/api/login", { email, password });
         localStorage.setItem("JWT", response.data.token);
+
+        return { name: response.data.name, privilege: response.data.privilege, email }
     };
 
     public registerUser = async (name: string, email: string, password: string): Promise<void> => {
@@ -78,7 +74,7 @@ export class ApiClient {
         email: string;
         privilege: boolean;
     }> => {
-        return  await this.get<{
+        return await this.get<{
             name: string;
             email: string;
             privilege: boolean;
@@ -108,7 +104,7 @@ export class ApiClient {
         } catch (e) {
             throw Error(e);
         }
-}
+    }
 
     private buildQueryString(url: string, params?: QueryParams) {
         let queryString = url;
@@ -125,3 +121,5 @@ export class ApiClient {
         return queryString;
     }
 }
+
+export default new ApiClient();
