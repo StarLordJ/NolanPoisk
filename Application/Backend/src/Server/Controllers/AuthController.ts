@@ -66,7 +66,7 @@ export class AuthController {
 
             const passwordHashed = bcrypt.hashSync(password);
 
-            let newUser = { username: req.body.name, email: email, password: passwordHashed, privilege: false };
+            let newUser = { name: req.body.name, email: email, password: passwordHashed, privilege: false };
 
             try {
                 await this.storage.registerUser(newUser);
@@ -147,11 +147,13 @@ export class AuthController {
                         const token = jwt.sign({ id: user.email }, jwtConfig.secret);
                         console.log(token)
                         const userFromDB = await this.storage.searchConsumer(user.email);
+
+                        console.log(userFromDB);
                         res.status(200).send({
                             auth: true,
                             token: token,
-                            privelege: userFromDB.privilege,
-                            name: userFromDB.username,
+                            privilege: userFromDB.privilege,
+                            name: userFromDB.name,
                             message: "Пользователь найден и авторизован",
                         })
                     })

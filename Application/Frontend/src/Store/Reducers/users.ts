@@ -1,9 +1,12 @@
 import { Actions } from "../Actions/users";
-import { User } from 'components/App/App';
+import { User } from 'components/Types';
 
 export function user(state = null, action: { type: string, user: User | undefined }) {
     switch (action.type) {
+        case Actions.LOGIN_USER:
         case Actions.FETCH_USER_BY_TOKEN:
+        case Actions.LOGOUT_USER:
+        case Actions.REGISTER_AND_LOGIN_USER:
             return action.user || null;
         default:
             return state;

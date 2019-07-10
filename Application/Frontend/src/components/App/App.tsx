@@ -1,15 +1,10 @@
 import React from "react";
 import { MoviesList } from "../MoviesList/MoviesList";
-import { Header } from "../Header/Header"
+import { HeaderContainer as Header } from "../Header/HeaderContainer"
 import { Router, Route } from "react-router";
 import { createHashHistory } from "history";
 import { MoviePage } from '../MoviePage/MoviePage';
-
-export interface User {
-    name: string;
-    email: string;
-    privilege: boolean;
-}
+import { User } from "../Types";
 
 interface Props {
     user: User | null;
@@ -24,7 +19,7 @@ export class App extends React.Component<Props> {
     render() {
         return (
             <Router history={createHashHistory()}>
-                <Header onLogOut={this.checkIsLogin} />
+                <Header />
                 <Route exact path="/" component={MoviesList} />
                 <Route path="/movie/:name" component={MoviePage} />
             </Router>

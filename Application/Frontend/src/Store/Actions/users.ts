@@ -27,7 +27,44 @@ export function checkUserIsLogin(token: string) {
 export function logInUser(email: string, password: string) {
     return async (dispatch: Dispatch) => {
         try {
-            const user = await ApiClient.authorizeUser(email, password)
+            const user = await ApiClient.authorizeUser(email, password);
+            dispatch({
+                type: Actions.LOGIN_USER,
+                user,
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+export function logOutUser() {
+    return (dispatch: Dispatch) => {
+        ApiClient.logOutUser();
+        dispatch({
+            type: Actions.LOGOUT_USER
+        });
+    }
+}
+
+export function registerAndLoginUser(name: string, email: string, password: string) {
+    return async (dispatch: Dispatch) => {
+        try {
+            const response = await ApiClient.registerUser(name, email, password);
+
+            if (response.status === 200) {
+                try {
+                    const user = await ApiClient.authorizeUser(email, password);
+                    dispatch({
+                        type: Actions.REGISTER_AND_LOGIN_USER,
+                        user,
+                    })
+                } catch (er) {
+                    console.log(er);
+                }
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 }

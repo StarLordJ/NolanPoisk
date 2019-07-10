@@ -1,7 +1,7 @@
 import { Client } from "pg";
 
 interface User {
-    username: string;
+    name: string;
     password: string;
     email: string;
     privilege: boolean;
@@ -22,7 +22,7 @@ export class AuthStorage {
     }
 
     public async registerUser(user: User): Promise<void> {
-        const queryString = `INSERT INTO "public"."Users" VALUES ('${user.username}', '${user.password}', '${user.email}', ${user.privilege})`;
+        const queryString = `INSERT INTO "public"."Users" VALUES ('${user.name}', '${user.password}', '${user.email}', ${user.privilege})`;
 
         await this.client.query(queryString);
     }

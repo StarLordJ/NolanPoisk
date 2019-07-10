@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Modal } from "./Modal";
-import { authorizeUser, registerUser } from "../../Api/ApiClient";
 
 import styles from "./style.less"
 
 interface Props {
-    onClick: () => void;
+    logInUser: (email: string, password: string) => void;
+    registerAndLoginUser: (name: string, email: string, password: string) => void;
+    close: () => void;
     isRegisration: boolean;
 }
 
@@ -15,7 +16,7 @@ interface State {
     password: string;
 }
 
-export class RegistrationForm extends React.Component<Props, State> {
+export class Form extends React.Component<Props, State> {
     state: State = { name: "", email: "", password: "" }
 
     render() {
@@ -46,12 +47,11 @@ export class RegistrationForm extends React.Component<Props, State> {
         const { name, email, password } = this.state;
 
         if (this.props.isRegisration) {
-            await registerUser(name, email, password);
-            await authorizeUser(email, password);
+            this.props.registerAndLoginUser(name, email, password)
         } else {
-            await authorizeUser(email, password);
+            this.props.logInUser(email, password);
         }
 
-        await this.props.onClick();
+        await this.props.close();
     }
 }

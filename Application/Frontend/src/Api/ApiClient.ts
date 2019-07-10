@@ -1,7 +1,7 @@
 import { Movie } from "components/MovieItem/MovieItem";
 import { Review } from "components/MoviePage/ReviewItem"
-import axios, { AxiosRequestConfig } from "axios";
-import { User } from 'components/App/App';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { User } from 'components/Types';
 
 interface QueryParams {
     [key: string]: string;
@@ -13,6 +13,8 @@ interface QueryOptions {
 }
 
 export class ApiClient {
+    private user: User | null = null;
+
     public getAllMovies = async (): Promise<Movie[]> => {
         return await this.get<Movie[]>("/api/movies");
     };
@@ -25,28 +27,37 @@ export class ApiClient {
         return await this.get<Review[]>("/api/review", { params: { name: movie } });
     };
 
-    public getMovieRatingOfUser = async (movie: string, email: string): Promise<number> => {
-        return await this.get<number>("/api/userRating", { params: { name: movie, email } });
+    public getMovieRatingOfUser = async (movie: string): Promise<number> => {
+        return await this.get<number>("/api/userRating", { params: { name: movie, email: this.user.email } });
     };
 
     public getMovieRating = async (movie: string): Promise<{ rating: number; count: number }> => {
         return await this.get<{ rating: number; count: number }>("/api/movieRating", { params: { name: movie } });
     };
 
-    public setUserRating = async (mark: number, movie: string, email: string): Promise<void> => {
-        await this.post("/api/userRating/set", { rate: mark, movie, email });
+    public setUserRating = async (mark: number, movie: string): Promise<void> => {
+        if (!this.user) {
+            throw Error("Авторизуйтесь!");
+        }
+        await this.post("/api/userRating/set", { rate: mark, movie, email: this.user.email });
     };
 
-    public deleteUserRating = async (movie: string, email: string): Promise<void> => {
-        await this.post("/api/userRating/delete", { movie, email });
+    public deleteUserRating = async (movie: string): Promise<void> => {
+        if (!this.user) {
+            throw Error("Авторизуйтесь!");
+        }
+        await this.post("/api/userRating/delete", { movie, email: this.user.email });
     };
 
-    public sendMovieReview = async (user: User, movie: string, text: string): Promise<void> => {
+    public sendMovieReview = async (movie: string, text: string): Promise<void> => {
+        if (!this.user) {
+            throw Error("Авторизуйтесь!");
+        }
         await this.post("/api/review/set", {
             movie: movie,
             text: text,
-            username: user.name,
-            email: user.email
+            username: this.user.name,
+            email: this.user.email
         });
     };
 
@@ -60,33 +71,31 @@ export class ApiClient {
 
     public authorizeUser = async (email: string, password: string): Promise<User> => {
         const response = await this.post("/api/login", { email, password });
+        const user = { name: response.data.name, privilege: response.data.privilege, email };
+        this.user = user;
+
         localStorage.setItem("JWT", response.data.token);
-
-        return { name: response.data.name, privilege: response.data.privilege, email }
+        return user
     };
 
-    public registerUser = async (name: string, email: string, password: string): Promise<void> => {
-        await this.post("/api/register", { name, email, password });
+    public registerUser = async (name: string, email: string, password: string): Promise<AxiosResponse> => {
+        return await this.post("/api/register", { name, email, password });
     };
 
-    public checkUserIsLogin = async (token: string): Promise<{
-        name: string;
-        email: string;
-        privilege: boolean;
-    }> => {
-        return await this.get<{
-            name: string;
-            email: string;
-            privilege: boolean;
-        }>("/api/check", {
+    public checkUserIsLogin = async (token: string): Promise<User> => {
+        const user = await this.get<User>("/api/check", {
             config: {
                 headers: { Authorization: `JWT ${token}` }
             }
         });
+        this.user = user;
+
+        return user;
     };
 
     public logOutUser = (): void => {
         localStorage.removeItem("JWT");
+        this.user = null;
     };
 
     private async get<T>(url: string, options: QueryOptions = {}): Promise<T> {

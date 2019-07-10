@@ -1,22 +1,29 @@
 import * as React from "react";
-import { RegistrationForm } from "../Auth/Forms";
+import { FormsContainer as RegistrationForm } from "../Auth/FormsContainer";
 import { Link } from "react-router-dom";
 
 import styles from "./style.less"
-import { User } from 'index';
+import { User } from '../Types';
 
 interface Props {
     user: User | null;
-    onLogOut: () => Promise<void>;
+    logOutUser: () => Promise<void>;
 }
 
 interface State {
     isRegisration: boolean;
     isAuthorisation: boolean;
+    isPanelHidden: boolean;
 }
 
 export class Header extends React.Component<Props, State> {
-    state: State = { isRegisration: false, isAuthorisation: false };
+    state: State = { isRegisration: false, isAuthorisation: false, isPanelHidden: true };
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ isPanelHidden: false })
+        }, 400);
+    }
 
     render() {
         const { user } = this.props;
@@ -24,10 +31,10 @@ export class Header extends React.Component<Props, State> {
             <div className={styles.header}>
                 <div className={styles.container}>
                     <Link className={styles.headerLink} to="/"><h1>НоланПоиск</h1></Link>
-                    {!user ? null : user.email && user.name ? this.renderUserHeader() : this.renderActions()}
+                    {this.state.isPanelHidden ? null : (user ? this.renderUserHeader() : this.renderActions())}
                 </div>
                 {this.state.isRegisration || this.state.isAuthorisation ? this.renderRegistrationForm() : null}
-            </div >
+            </div>
         )
     }
 
@@ -41,21 +48,15 @@ export class Header extends React.Component<Props, State> {
     private renderUserHeader = (): JSX.Element => (
         <div className={styles.actions}>
             <div className={styles.username}>{this.props.user.name}</div>
-            <div className={styles.action} onClick={this.handleLogOut}>Выход</div>
+            <div className={styles.action} onClick={this.props.logOutUser}>Выход</div>
         </div>
     )
 
-    private renderRegistrationForm = (): JSX.Element => <RegistrationForm onClick={this.resetState} isRegisration={this.state.isRegisration} />;
+    private renderRegistrationForm = (): JSX.Element => <RegistrationForm close={this.resetState} isRegisration={this.state.isRegisration} />;
     private handleRegistrationInit = (): void => this.setState({ isRegisration: true });
     private handleAuthorisationInit = (): void => this.setState({ isAuthorisation: true });
 
     private resetState = async (): Promise<void> => {
-        await this.props.onLogOut();
         this.setState({ isAuthorisation: false, isRegisration: false });
     };
-
-    private handleLogOut = async (): Promise<void> => {
-        logOutUser();
-        await this.props.onLogOut();
-    }
 }
