@@ -1,8 +1,6 @@
 import ApiClient from "../../Api/ApiClient"
 import { Dispatch } from 'redux';
 
-export const FETCH_USER_BY_TOKEN = "FETCH_USER_BY_TOKEN";
-
 export enum Actions {
     FETCH_USER_BY_TOKEN = "FETCH_USER_BY_TOKEN",
     LOGIN_USER = "LOGIN_USER",

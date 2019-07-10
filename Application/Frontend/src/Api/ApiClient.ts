@@ -20,7 +20,7 @@ export class ApiClient {
     };
 
     public getMovieInfo = async (movie: string): Promise<Movie> => {
-        return await this.get<Movie>("/api/movies", { params: { name: movie } });
+        return await this.get<Movie>("/api/movie", { params: { name: movie } });
     };
 
     public getMovieReviews = async (movie: string): Promise<Review[]> => {
@@ -28,6 +28,9 @@ export class ApiClient {
     };
 
     public getMovieRatingOfUser = async (movie: string): Promise<number> => {
+        if (!this.user) {
+            throw Error("Авторизуйтесь!");
+        }
         return await this.get<number>("/api/userRating", { params: { name: movie, email: this.user.email } });
     };
 
@@ -122,7 +125,7 @@ export class ApiClient {
             queryString += "?";
 
             for (const [name, value] of Object.entries(params)) {
-                const pair = name + encodeURIComponent(value) + "&";
+                const pair = name + "=" + encodeURIComponent(value) + "&";
                 queryString += pair;
             }
         }

@@ -1,9 +1,9 @@
 import React from "react";
-import { MoviesList } from "../MoviesList/MoviesList";
+import { MoviesListContainer as MoviesList } from "../MoviesList/MoviesListContainer";
 import { HeaderContainer as Header } from "../Header/HeaderContainer"
 import { Router, Route } from "react-router";
 import { createHashHistory } from "history";
-import { MoviePage } from '../MoviePage/MoviePage';
+import { MoviePageContainer as MoviePage } from '../MoviePage/MoviePage';
 import { User } from "../Types";
 
 interface Props {

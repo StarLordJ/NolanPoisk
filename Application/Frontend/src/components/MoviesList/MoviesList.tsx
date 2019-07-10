@@ -1,28 +1,27 @@
 import React from "react";
 import { MovieItem, Movie } from "../MovieItem/MovieItem";
-import { getAllMovies } from "../../Api/ApiClient";
 
 import styles from "./style.less";
 
-interface State {
-    moviesList: Movie[];
+interface Props {
+    movies: Movie[];
+    getMovies: () => void;
 }
 
-export class MoviesList extends React.Component<T, State> {
-    state: State = { moviesList: [] };
-
-    async componentDidMount(): Promise<void> {
-        const moviesList = await getAllMovies();
-        this.setState({ moviesList });
+export class MoviesList extends React.Component<Props> {
+    componentDidMount(): void {
+        if (this.props.movies.length < 2) {
+            this.props.getMovies();
+        }
     }
 
     render() {
-        const { moviesList } = this.state;
+        const { movies } = this.props;
 
         return (
             <div className={styles.main}>
                 <div className={styles.movieContainer}>
-                    {Boolean(moviesList.length) && moviesList.map(movie => <MovieItem movie={movie} />)}
+                    {Boolean(movies.length) && movies.map(movie => <MovieItem movie={movie} key={movie.name} />)}
                 </div>
             </div>
         )

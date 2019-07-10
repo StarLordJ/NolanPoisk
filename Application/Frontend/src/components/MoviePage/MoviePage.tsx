@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Reviews } from "./Reviews";
 import { ReviewForm } from "./ReviewForm";
-import { getMovieInfo } from "../../Api/ApiClient";
-import { User } from "../../index";
+import { User } from "../Types";
+import { connect } from "react-redux";
 
 import styles from "./style.less";
 import { Raiting } from './Raiting';
+import { getMovieFullInfo } from '../../Store/Actions/movies';
 
 export interface Movie {
     name: string;
@@ -13,6 +14,7 @@ export interface Movie {
     tagline: string;
     description: string;
     trailerUrl: string;
+    shortDescription: string;
     genre: string[];
     year: number;
     posterUrl: string;
@@ -24,26 +26,23 @@ interface Props {
             name: string;
         };
     },
-    user: User | null;
-}
-
-interface State {
-    movie: Movie | null;
+    movie: Movie;
+    getMovieInfo: () => void;
 }
 
 export class MoviePage extends React.Component<Props> {
     public props: Props;
-    public state: State = { movie: null };
 
-    public async componentDidMount(): Promise<void> {
-        const response = await getMovieInfo(this.props.match.params.name);
-        this.setState({ movie: response });
+    componentDidMount(): void {
+        if (!(this.props.movie && this.props.movie.description)) {
+            this.props.getMovieInfo();
+        }
     }
 
     render() {
-        const { movie } = this.state;
+        const { movie } = this.props;
 
-        return movie && (
+        return movie && movie.description ? (
             <React.Fragment>
                 <div className={styles.container}>
                     <img src={movie.posterUrl} alt={movie.name} />
@@ -86,7 +85,25 @@ export class MoviePage extends React.Component<Props> {
                     <Reviews user={this.props.user} movie={movie.name} />
                 </div>
             </React.Fragment>
-        )
+        ) : null
     }
 
 }
+
+const mapStateToProps = (state, ownProps: Pick<Props, "match">) => {
+    const movieName = ownProps.match.params.name;
+    const movie = state.movies.find(({ name }: Movie) => name === movieName);
+
+    return {
+        movie
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps: Pick<Props, "match">) => {
+    return {
+        getMovieInfo: () => dispatch(getMovieFullInfo(ownProps.match.params.name)),
+    }
+}
+
+export const MoviePageContainer = connect(mapStateToProps, mapDispatchToProps)(MoviePage);
+
