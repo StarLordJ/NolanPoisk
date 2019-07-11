@@ -6,7 +6,7 @@ export function reviews(state = {}, action: { type: Actions, data: { movie?: str
         case Actions.SEND_MOVIE_REVIEW: {
             const oldList = state[action.data.movie] || [];
             const newOb = {};
-            newOb[action.data.movie] = [...oldList, ...action.data.reviews];
+            newOb[action.data.movie] = [...action.data.reviews, ...oldList];
 
             return { ...state, ...newOb }
         }

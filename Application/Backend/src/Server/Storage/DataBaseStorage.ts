@@ -20,7 +20,7 @@ export interface MovieFullInfo {
 }
 
 export interface MovieReview {
-    useremail: string;
+    email: string;
     date: Date;
     text: string;
     isApproved: boolean;
@@ -106,14 +106,14 @@ export class DataBaseStorage {
 
         return response.rows.map((reviewInfo: DBReview & DBUser): MovieReview => {
             return {
-                useremail: reviewInfo.user_email,
+                email: reviewInfo.user_email,
                 text: reviewInfo.review_text,
                 date: reviewInfo.date,
                 isApproved: reviewInfo.is_approved,
                 id: reviewInfo.id,
                 username: reviewInfo.name,
             }
-        }).sort((a, b): number => a.id - b.id);
+        }).sort((a, b): number => b.id - a.id);
     }
     public async setReview(movie: string, text: string, userEmail: string): Promise<number> {
         const queryString = `INSERT INTO "public"."Reviews" VALUES ('${movie}', '${text}', FALSE, '${(new Date).toISOString()}', '${userEmail}')`;

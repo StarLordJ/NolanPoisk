@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 export interface Review {
     username: string;
-    useremail: string;
+    email: string;
     date: Date;
     text: string;
     isApproved: boolean;
@@ -35,15 +35,17 @@ export class ReviewItem extends React.Component<Props> {
     private renderEditButton = (): JSX.Element | null => {
         const { user, review } = this.props;
 
-        if (!user || user.email !== review.useremail || user.privilege) return null;
+        if (user && user.email === review.email || user && user.privilege) {
+            return <div onClick={() => this.setState({ isEditing: true })} className={styles.pencil}>✎</div>
+        }
 
-        return <div onClick={() => this.setState({ isEditing: true })} className={styles.pencil}>✎</div>
+        return null;
     }
 
     private renderRemoveButton = (): JSX.Element | null => {
-        const { user = {}, review } = this.props;
+        const { user, review } = this.props;
 
-        if (user.email === review.useremail || user.privilege) {
+        if (user && user.email === review.email || user && user.privilege) {
             return <div onClick={() => this.props.onDelete(this.props.review.id)} className={styles.deleteReview} >✖</div >
         }
 
