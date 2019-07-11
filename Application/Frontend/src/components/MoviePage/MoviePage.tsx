@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Reviews } from "./Reviews";
-import { ReviewForm } from "./ReviewForm";
-import { User } from "../Types";
+import { ReviewsContainer as Reviews } from "./Reviews";
+import { ReviewFormContainer as ReviewForm } from "./ReviewForm";
 import { connect } from "react-redux";
 
 import styles from "./style.less";
@@ -79,10 +78,10 @@ export class MoviePage extends React.Component<Props> {
                     </iframe>
                 </div>
                 <div className={styles.formContainer}>
-                    <ReviewForm user={this.props.user} movie={movie.name} />
+                    <ReviewForm movie={movie.name} />
                 </div>
                 <div className={styles.reviewsContainer}>
-                    <Reviews user={this.props.user} movie={movie.name} />
+                    <Reviews movie={movie.name} />
                 </div>
             </React.Fragment>
         ) : null

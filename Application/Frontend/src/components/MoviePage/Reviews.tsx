@@ -1,37 +1,46 @@
 import * as React from "react";
-import { Review, ReviewItem } from "./ReviewItem";
-import { getMovieReviews, deleteReview } from "../../Api/ApiClient"
-import { User } from 'index';
+import { Review, ReviewItemContainer as ReviewItem } from "./ReviewItem";
+import { getMovieReviews, deleteMovieReview } from "../../Store/Actions/reviews";
+import { User } from '../Types';
+import { connect } from 'react-redux';
 
 interface Props {
     movie: string;
     user: User | null;
-}
-
-interface State {
     reviews: Review[];
+    getMovieReviews: () => void;
+    deleteReview: (id: number) => void;
 }
 
-export class Reviews extends React.Component<Props, State> {
-    public state: State = { reviews: [] };
+export class Reviews extends React.Component<Props> {
 
     public async componentDidMount(): Promise<void> {
-        const reviews = await getMovieReviews(this.props.movie);
-
-        this.setState({ reviews });
-    }
-
-    public updateReviews = async (id: number): Promise<void> => {
-        await deleteReview(id);
-
-        const reviews = await getMovieReviews(this.props.movie);
-
-        this.setState({ reviews });
+        if (!(this.props.reviews && this.props.reviews.length)) {
+            this.props.getMovieReviews();
+        }
     }
 
     public render() {
-        const { reviews } = this.state;
+        const { reviews } = this.props;
 
-        return Boolean(reviews.length) ? reviews.map(review => <ReviewItem onClick={this.updateReviews} user={this.props.user} review={review} movie={this.props.movie} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
+        return reviews && Boolean(reviews.length) ? reviews.map(review => <ReviewItem onDelete={(id: number) => this.props.deleteReview(id)} review={review} movie={this.props.movie} key={review.id} />) : <div>Пока никто не написал рецензии. Станьте первым!</div>
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    const { movie } = ownProps;
+    const reviews = state.reviews[movie];
+
+    return { reviews };
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { movie } = ownProps;
+
+    return {
+        getMovieReviews: () => dispatch(getMovieReviews(movie)),
+        deleteReview: (id: number) => dispatch(deleteMovieReview(movie, id)),
+    }
+}
+
+export const ReviewsContainer = connect(mapStateToProps, mapDispatchToProps)(Reviews);

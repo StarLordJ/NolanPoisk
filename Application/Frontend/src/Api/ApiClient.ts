@@ -52,24 +52,26 @@ export class ApiClient {
         await this.post("/api/userRating/delete", { movie, email: this.user.email });
     };
 
-    public sendMovieReview = async (movie: string, text: string): Promise<void> => {
+    public sendMovieReview = async (movie: string, text: string): Promise<AxiosResponse> => {
         if (!this.user) {
             throw Error("Авторизуйтесь!");
         }
-        await this.post("/api/review/set", {
+        const response: AxiosResponse = await this.post("/api/review/set", {
             movie: movie,
             text: text,
             username: this.user.name,
             email: this.user.email
         });
+
+        return response;
     };
 
-    public updateMovieReview = async (id: number, text: string): Promise<void> => {
-        await this.post("/api/review/update", { id, text });
+    public updateMovieReview = async (id: number, text: string): Promise<AxiosResponse> => {
+        return await this.post("/api/review/update", { id, text });
     };
 
-    public deleteReview = async (id: number): Promise<void> => {
-        await this.post("/api/review/delete", { id });
+    public deleteReview = async (id: number): Promise<AxiosResponse> => {
+        return await this.post("/api/review/delete", { id });
     };
 
     public authorizeUser = async (email: string, password: string): Promise<User> => {

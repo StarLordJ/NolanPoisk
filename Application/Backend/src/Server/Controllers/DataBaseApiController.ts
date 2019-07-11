@@ -32,9 +32,9 @@ export class ApiController {
         return await this.storage.getMovieReviews(movie);
     }
 
-    @httpPost("/api/review/set", httpReturn.Void, httpBodyParam("movie", httpType.String), httpBodyParam("text", httpType.String), httpBodyParam("email", httpType.String))
-    public async setReview(movie: string, text: string, userEmail: string): Promise<void> {
-        await this.storage.setReview(movie, text, userEmail);
+    @httpPost("/api/review/set", httpReturn.Json, httpBodyParam("movie", httpType.String), httpBodyParam("text", httpType.String), httpBodyParam("email", httpType.String))
+    public async setReview(movie: string, text: string, userEmail: string): Promise<number> {
+        return await this.storage.setReview(movie, text, userEmail);
     }
 
     @httpPost("/api/review/update", httpReturn.Void, httpBodyParam("id", httpType.Number), httpBodyParam("text", httpType.String))

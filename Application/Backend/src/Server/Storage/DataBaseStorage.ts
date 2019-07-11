@@ -113,17 +113,18 @@ export class DataBaseStorage {
                 id: reviewInfo.id,
                 username: reviewInfo.name,
             }
-        });
+        }).sort((a, b): number => a.id - b.id);
     }
-
-    public async setReview(movie: string, text: string, userEmail: string): Promise<void> {
+    public async setReview(movie: string, text: string, userEmail: string): Promise<number> {
         const queryString = `INSERT INTO "public"."Reviews" VALUES ('${movie}', '${text}', FALSE, '${(new Date).toISOString()}', '${userEmail}')`;
-
         await this.client.query(queryString);
+
+        const response = await this.client.query(`SELECT MAX(id) FROM "public"."Reviews"`);
+        return response.rows[0].max;
     }
 
     public async updateReview(id: number, text: string, ): Promise<void> {
-        const queryString = `UPDATE "public"."Reviews" SET review_text = '${text}', date='${(new Date).toISOString()}' WHERE id='${id}'`;
+        const queryString = `UPDATE "public"."Reviews" SET review_text = '${text}' WHERE id='${id}'`;
 
         await this.client.query(queryString);
     }

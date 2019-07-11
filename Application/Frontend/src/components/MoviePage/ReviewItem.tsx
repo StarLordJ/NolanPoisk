@@ -1,8 +1,10 @@
 import * as React from "react";
-import { updateMovieReview } from "../../Api/ApiClient";
-import { User } from 'index';
+import { updateMovieReview } from "../../Store/Actions/reviews";
+
+import { User } from '../Types';
 
 import styles from "./style.less";
+import { connect } from 'react-redux';
 
 
 export interface Review {
@@ -18,7 +20,8 @@ interface Props {
     review: Review;
     user: User | null;
     movie: string;
-    onClick: (id: number) => Promise<void>;
+    onDelete: (id: number) => void;
+    updateMovieReview: (text: string, cb: (status: boolean) => void) => void;
 }
 
 export class ReviewItem extends React.Component<Props> {
@@ -29,42 +32,27 @@ export class ReviewItem extends React.Component<Props> {
         return this.renderReview();
     }
 
-    public componentDidMount(): void {
-        this.setState({ text: this.props.review.text })
-    }
-
-    private editText = (): void => {
-        this.setState({ isEditing: true })
-    }
-
     private renderEditButton = (): JSX.Element | null => {
         const { user, review } = this.props;
 
-        if (!user || user.email !== review.useremail) return null;
+        if (!user || user.email !== review.useremail || user.privilege) return null;
 
-        return <div onClick={this.editText} className={styles.pencil}>✎</div>
-    }
-
-    private handleClick = async (): Promise<void> => {
-        await this.props.onClick(this.props.review.id);
+        return <div onClick={() => this.setState({ isEditing: true })} className={styles.pencil}>✎</div>
     }
 
     private renderRemoveButton = (): JSX.Element | null => {
         const { user = {}, review } = this.props;
 
         if (user.email === review.useremail || user.privilege) {
-            return <div onClick={this.handleClick} className={styles.deleteReview}>✖</div>
+            return <div onClick={() => this.props.onDelete(this.props.review.id)} className={styles.deleteReview} >✖</div >
         }
 
         return null;
     }
 
     private renderReview = (): JSX.Element | null => {
-        const { user, review } = this.props;
+        const { review } = this.props;
 
-        if (!user || !review.isApproved && user.email !== review.useremail && !user.privilege) {
-            return null;
-        }
         return (
             <div className={styles.reviewItem}>
                 {!this.state.isEditing ?
@@ -75,10 +63,10 @@ export class ReviewItem extends React.Component<Props> {
                         </div>
                         <div>{review.username}</div>
                         <div>{review.date}</div>
-                        <div>{this.state.text}</div>
+                        <div>{review.text}</div>
                     </React.Fragment> :
                     <form onSubmit={this.handleSubmit} className={styles.form}>
-                        <textarea className={styles.textarea} value={this.state.text} onChange={this.handleChange} style={{ width: "800px" }} />
+                        <textarea className={styles.textarea} defaultValue={review.text} onChange={this.handleChange} style={{ width: "800px" }} />
                         <button className={styles.button} type="submit">Отправить</button>
                     </form>}
             </div>
@@ -89,9 +77,27 @@ export class ReviewItem extends React.Component<Props> {
         this.setState({ text: e.target.value })
     }
 
-    private handleSubmit = async (e) => {
+    private handleSubmit = (e) => {
         e.preventDefault();
-        await updateMovieReview(this.props.review.id, this.state.text);
-        this.setState({ isEditing: false });
+        this.props.updateMovieReview(this.state.text, (status: boolean) => {
+            if (status) {
+                this.setState({ isEditing: false });
+            }
+        });
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { movie, review } = ownProps;
+    return {
+        updateMovieReview: (text: string, cb: (status: boolean) => void) => dispatch(updateMovieReview(movie, review.id, text, cb)),
+    }
+}
+
+export const ReviewItemContainer = connect(mapStateToProps, mapDispatchToProps)(ReviewItem);
