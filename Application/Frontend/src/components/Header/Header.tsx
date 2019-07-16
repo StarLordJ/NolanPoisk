@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import styles from "./style.less"
 import { User } from '../Types';
 
-interface Props {
+export interface Props {
     user: User | null;
     logOutUser: () => Promise<void>;
 }

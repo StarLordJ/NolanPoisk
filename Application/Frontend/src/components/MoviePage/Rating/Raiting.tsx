@@ -5,7 +5,7 @@ import styles from "./style.less";
 
 export interface Props {
     movie: string;
-    user: User;
+    user: User | null;
     rating: RatingInfo;
     setUserRating: (mark: number) => void;
     deleteUserRating: () => void;

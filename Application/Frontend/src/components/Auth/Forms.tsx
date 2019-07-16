@@ -3,7 +3,7 @@ import { Modal } from "./Modal";
 
 import styles from "./style.less"
 
-interface Props {
+export interface Props {
     logInUser: (email: string, password: string) => void;
     registerAndLoginUser: (name: string, email: string, password: string) => void;
     close: () => void;
@@ -19,7 +19,7 @@ interface State {
 export class Form extends React.Component<Props, State> {
     state: State = { name: "", email: "", password: "" }
 
-    render() {
+    render(): JSX.Element {
         return (
             <Modal>
                 <div className={styles.RegistrationForm}>

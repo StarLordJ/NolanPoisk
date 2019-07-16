@@ -3,11 +3,15 @@ import * as ReactDOM from "react-dom";
 
 const root = document.getElementById("root");
 
-export class Modal extends React.Component {
+interface Props {
+    children: JSX.Element;
+}
+
+export class Modal extends React.Component<Props> {
     private el: HTMLDivElement;
     private modalRoot: HTMLDivElement;
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         const modalRoot = document.createElement("div");
 

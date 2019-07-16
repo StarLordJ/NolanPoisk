@@ -2,17 +2,19 @@ import { connect } from 'react-redux';
 import { sendMovieReview } from "../../../Store/Actions/reviews";
 import { Store } from 'Store/Store';
 import { ThunkDispatch } from 'redux-thunk';
-import { Action } from 'redux';
-import { ReviewForm } from "./ReviewForm";
+import { Actions } from 'Store/Actions/Actions';
+import { ReviewForm, Props } from "./ReviewForm";
 
+type MappedStateProps = Pick<Props, "user">;
+type MappedDispatchProps = Pick<Props, "sendMovieReview">;
 
-const mapStateToProps = (state: Store) => {
+const mapStateToProps = (state: Store): MappedStateProps => {
     return {
         user: state.user,
     }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Action>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): MappedDispatchProps => {
     return {
         sendMovieReview: (name: string, text: string, cb: (status: boolean) => void) => dispatch(sendMovieReview(name, text, cb)),
     }

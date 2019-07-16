@@ -2,18 +2,23 @@ import { updateMovieReview } from "../../../Store/Actions/reviews";
 import { connect } from 'react-redux';
 import { Store } from 'Store/Store';
 import { ThunkDispatch } from 'redux-thunk';
-import { Action } from 'redux';
+import { Actions } from 'Store/Actions/Actions';
 
-import { Props, ReviewItem } from "./ReviewItem";
+import { ReviewItem, Props } from "./ReviewItem";
 
-const mapStateToProps = (state: Store) => {
+type OwnProps = Pick<Props, "movie" | "review" | "onDelete">;
+type MappedStateProps = Pick<Props, "user">;
+type MappedDispatchProps = Pick<Props, "updateMovieReview">;
+
+const mapStateToProps = (state: Store): MappedStateProps => {
     return {
         user: state.user,
     }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Action>, ownProps: Pick<Props, "movie" | "review">) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>, ownProps: OwnProps): MappedDispatchProps => {
     const { movie, review } = ownProps;
+
     return {
         updateMovieReview: (text: string, cb: (status: boolean) => void) => dispatch(updateMovieReview(movie, review.id, text, cb)),
     }

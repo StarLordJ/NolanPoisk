@@ -37,7 +37,7 @@ export function logInUser(email: string, password: string) {
 }
 
 export function logOutUser() {
-    return (dispatch: Dispatch) => {
+    return async (dispatch: Dispatch) => {
         ApiClient.logOutUser();
         dispatch({
             type: Actions.LOGOUT_USER,

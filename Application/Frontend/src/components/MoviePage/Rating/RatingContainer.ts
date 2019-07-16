@@ -1,18 +1,22 @@
 import { ThunkDispatch } from 'redux-thunk';
 import { Store } from 'Store/Store';
-import { Action } from 'redux';
+import { Actions } from 'Store/Actions/Actions';
 import { connect } from 'react-redux';
 import { getMovieRating, setUserRating, deleteUserRating } from "../../../Store/Actions/rating";
 import { Rating, Props } from "./Raiting";
 
-const mapStateToProps = (state: Store, ownProps: Pick<Props, "movie">) => {
+type OwnProps = Pick<Props, "movie">;
+type MappedStateProps = Pick<Props, "rating" | "user">;
+type MappedDispatchProps = Pick<Props, "deleteUserRating" | "setUserRating" | "getMovieRating">;
+
+const mapStateToProps = (state: Store, ownProps: OwnProps): MappedStateProps => {
     return {
         rating: state.ratings[ownProps.movie] || { averageRating: { rating: 0, count: 0 }, userMark: 0 },
         user: state.user,
     }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Action>, ownProps: Pick<Props, "movie">) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>, ownProps: OwnProps): MappedDispatchProps => {
     return {
         deleteUserRating: () => dispatch(deleteUserRating(ownProps.movie)),
         setUserRating: (mark: number) => dispatch(setUserRating(mark, ownProps.movie)),

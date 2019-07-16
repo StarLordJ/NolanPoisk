@@ -1,10 +1,9 @@
 import * as React from "react";
 import { ReviewItem } from "../ReviewItem";
-import { User, Review } from '../../Types';
+import { Review } from '../../Types';
 
 export interface Props {
     movie: string;
-    user: User | null;
     reviews: Review[];
     getMovieReviews: () => void;
     deleteReview: (id: number) => void;

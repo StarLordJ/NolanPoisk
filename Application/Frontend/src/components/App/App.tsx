@@ -6,7 +6,7 @@ import { createHashHistory } from "history";
 import { MoviePage } from '../MoviePage';
 import { User } from "../Types";
 
-interface Props {
+export interface Props {
     user: User | null;
     checkUserIsLogin: (token: string) => void;
 }

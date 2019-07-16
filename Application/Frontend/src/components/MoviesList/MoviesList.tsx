@@ -4,7 +4,7 @@ import { MovieShortInfo } from 'components/Types';
 
 import styles from "./style.less";
 
-interface Props {
+export interface Props {
     movies: MovieShortInfo[];
     getMovies: () => void;
 }
