@@ -19,7 +19,7 @@ interface State {
 export class Header extends React.Component<Props, State> {
     state: State = { isRegisration: false, isAuthorisation: false, isPanelHidden: true };
 
-    componentDidMount() {
+    public componentDidMount() {
         setTimeout(() => {
             this.setState({ isPanelHidden: false })
         }, 400);

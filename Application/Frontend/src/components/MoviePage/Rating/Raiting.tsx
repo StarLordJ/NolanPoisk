@@ -14,8 +14,11 @@ export interface Props {
 
 export class Rating extends React.Component<Props> {
     public componentDidMount(): void {
-        if (this.props.rating)
-            this.props.getMovieRating();
+        this.props.getMovieRating();
+    }
+
+    public componentWillReceiveProps(): void {
+        this.props.getMovieRating();
     }
 
     private handleClick = (value: number): void => {
