@@ -1,9 +1,9 @@
 import React from "react";
-import { MoviesListContainer as MoviesList } from "../MoviesList/MoviesListContainer";
-import { HeaderContainer as Header } from "../Header/HeaderContainer"
+import { MoviesList } from "../MoviesList";
+import { Header } from "../Header"
 import { Router, Route } from "react-router";
 import { createHashHistory } from "history";
-import { MoviePageContainer as MoviePage } from '../MoviePage/MoviePage';
+import { MoviePage } from '../MoviePage';
 import { User } from "../Types";
 
 interface Props {
@@ -12,8 +12,8 @@ interface Props {
 }
 
 export class App extends React.Component<Props> {
-    public async componentDidMount(): Promise<void> {
-        await this.checkIsLogin();
+    public componentDidMount(): void {
+        this.checkIsLogin();
     }
 
     render() {
@@ -26,7 +26,7 @@ export class App extends React.Component<Props> {
         )
     }
 
-    private checkIsLogin = async (): Promise<void> => {
+    private checkIsLogin = (): void => {
         const accessString = localStorage.getItem("JWT");
 
         if (accessString === null) {

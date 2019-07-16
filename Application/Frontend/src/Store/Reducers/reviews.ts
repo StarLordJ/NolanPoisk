@@ -1,5 +1,5 @@
 import { Actions } from "../Actions/reviews";
-import { Review } from 'components/MoviePage/ReviewItem';
+import { Review } from 'components/MoviePage/ReviewItem/ReviewItem';
 
 export function reviews(state = {}, action: { type: Actions, data: { movie?: string, reviews?: [], id?: number, text?: string } }) {
     switch (action.type) {

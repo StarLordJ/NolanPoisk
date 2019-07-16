@@ -1,5 +1,5 @@
 import { Movie } from "components/MovieItem/MovieItem";
-import { Review } from "components/MoviePage/ReviewItem"
+import { Review } from "components/MoviePage/ReviewItem/ReviewItem"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { User } from 'components/Types';
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { MovieItem, Movie } from "../MovieItem/MovieItem";
+import { MovieItem } from "../MovieItem/MovieItem";
+import { MovieShortInfo } from 'components/Types';
 
 import styles from "./style.less";
 
 interface Props {
-    movies: Movie[];
+    movies: MovieShortInfo[];
     getMovies: () => void;
 }
 

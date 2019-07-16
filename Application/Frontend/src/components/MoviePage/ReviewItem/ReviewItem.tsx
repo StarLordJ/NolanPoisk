@@ -1,22 +1,9 @@
 import * as React from "react";
-import { updateMovieReview } from "../../Store/Actions/reviews";
-
-import { User } from '../Types';
+import { User, Review } from '../../Types';
 
 import styles from "./style.less";
-import { connect } from 'react-redux';
 
-
-export interface Review {
-    username: string;
-    email: string;
-    date: Date;
-    text: string;
-    isApproved: boolean;
-    id: number;
-}
-
-interface Props {
+export interface Props {
     review: Review;
     user: User | null;
     movie: string;
@@ -25,7 +12,6 @@ interface Props {
 }
 
 export class ReviewItem extends React.Component<Props> {
-    props: Props;
     state = { isEditing: false, text: "" };
 
     render() {
@@ -75,7 +61,7 @@ export class ReviewItem extends React.Component<Props> {
         )
     }
 
-    private handleChange = (e) => {
+    private handleChange = (e: React.SyntheticEvent) => {
         this.setState({ text: e.target.value })
     }
 
@@ -88,18 +74,3 @@ export class ReviewItem extends React.Component<Props> {
         });
     }
 }
-
-const mapStateToProps = state => {
-    return {
-        user: state.user,
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { movie, review } = ownProps;
-    return {
-        updateMovieReview: (text: string, cb: (status: boolean) => void) => dispatch(updateMovieReview(movie, review.id, text, cb)),
-    }
-}
-
-export const ReviewItemContainer = connect(mapStateToProps, mapDispatchToProps)(ReviewItem);

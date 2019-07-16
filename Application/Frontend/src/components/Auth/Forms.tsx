@@ -41,7 +41,7 @@ export class Form extends React.Component<Props, State> {
     private handleEmail = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ email: event.target.value })
     private handlePassword = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ password: event.target.value })
 
-    private handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
+    private handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>): void => {
         event.preventDefault();
 
         const { name, email, password } = this.state;
@@ -52,6 +52,6 @@ export class Form extends React.Component<Props, State> {
             this.props.logInUser(email, password);
         }
 
-        await this.props.close();
+        this.props.close();
     }
 }

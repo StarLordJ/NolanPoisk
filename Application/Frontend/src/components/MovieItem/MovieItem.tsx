@@ -1,22 +1,11 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { MovieShortInfo } from 'components/Types';
 
 import styles from "./style.less";
 
-export interface Movie {
-    name: string;
-    cast: string[];
-    tagline: string;
-    description: string;
-    trailerUrl: string;
-    shortDescription: string;
-    genre: string[];
-    year: number;
-    posterUrl: string;
-}
-
 interface Props {
-    movie: Movie
+    movie: MovieShortInfo
 }
 
 export function MovieItem(props: Props) {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormsContainer as RegistrationForm } from "../Auth/FormsContainer";
+import { Form } from "../Auth";
 import { Link } from "react-router-dom";
 
 import styles from "./style.less"
@@ -52,11 +52,11 @@ export class Header extends React.Component<Props, State> {
         </div>
     )
 
-    private renderRegistrationForm = (): JSX.Element => <RegistrationForm close={this.resetState} isRegisration={this.state.isRegisration} />;
+    private renderRegistrationForm = (): JSX.Element => <Form close={this.resetState} isRegisration={this.state.isRegisration} />;
     private handleRegistrationInit = (): void => this.setState({ isRegisration: true });
     private handleAuthorisationInit = (): void => this.setState({ isAuthorisation: true });
 
-    private resetState = async (): Promise<void> => {
+    private resetState = (): void => {
         this.setState({ isAuthorisation: false, isRegisration: false });
     };
 }

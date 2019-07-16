@@ -1,38 +1,23 @@
 import * as React from "react";
-import { ReviewsContainer as Reviews } from "./Reviews";
-import { ReviewFormContainer as ReviewForm } from "./ReviewForm";
-import { connect } from "react-redux";
+import { Reviews } from "./Reviews";
+import { ReviewForm } from "./ReviewForm";
+import { Rating } from './Rating';
+import { MovieShortInfo, MovieAdditionalInfo } from 'components/Types';
 
 import styles from "./style.less";
-import { RatingContainer as Raiting } from './Raiting';
-import { getMovieFullInfo } from '../../Store/Actions/movies';
 
-export interface Movie {
-    name: string;
-    cast: string[];
-    tagline: string;
-    description: string;
-    trailerUrl: string;
-    shortDescription: string;
-    genre: string[];
-    year: number;
-    posterUrl: string;
-}
-
-interface Props {
+export interface Props {
     match: {
         params: {
             name: string;
         };
     },
-    movie: Movie;
+    movie: MovieShortInfo & MovieAdditionalInfo;
     getMovieInfo: () => void;
 }
 
 export class MoviePage extends React.Component<Props> {
-    public props: Props;
-
-    componentDidMount(): void {
+    public componentDidMount(): void {
         if (!(this.props.movie && this.props.movie.description)) {
             this.props.getMovieInfo();
         }
@@ -64,7 +49,7 @@ export class MoviePage extends React.Component<Props> {
                 <div className={styles.reviewsContainer}>
                     <hr className={styles.hr} />
                     <div className={styles.itemDescription}>Рейтинг</div>
-                    <Raiting movie={movie.name} />
+                    <Rating movie={movie.name} />
                 </div>
                 <div className={styles.trailer}>
                     <h2 style={{ marginBottom: "20px" }}>Трейлер</h2>
@@ -86,23 +71,5 @@ export class MoviePage extends React.Component<Props> {
             </React.Fragment>
         ) : null
     }
-
 }
-
-const mapStateToProps = (state, ownProps: Pick<Props, "match">) => {
-    const movieName = ownProps.match.params.name;
-    const movie = state.movies.find(({ name }: Movie) => name === movieName);
-
-    return {
-        movie
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps: Pick<Props, "match">) => {
-    return {
-        getMovieInfo: () => dispatch(getMovieFullInfo(ownProps.match.params.name)),
-    }
-}
-
-export const MoviePageContainer = connect(mapStateToProps, mapDispatchToProps)(MoviePage);
 
