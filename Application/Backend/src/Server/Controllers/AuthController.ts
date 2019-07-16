@@ -119,7 +119,6 @@ export class AuthController {
         }, async (req, email, password, done): Promise<void> => await this.registerUser(req, email, password, done)));
 
         this.passport.use("jwt", new JWTStrategy(opts, async (jwtPayload, done): Promise<void> => {
-            console.log("Gsf")
             return await this.authByToken(jwtPayload, done)
         }));
 

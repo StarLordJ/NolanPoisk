@@ -4,7 +4,7 @@ import { ReviewFormContainer as ReviewForm } from "./ReviewForm";
 import { connect } from "react-redux";
 
 import styles from "./style.less";
-import { Raiting } from './Raiting';
+import { RatingContainer as Raiting } from './Raiting';
 import { getMovieFullInfo } from '../../Store/Actions/movies';
 
 export interface Movie {
@@ -64,7 +64,7 @@ export class MoviePage extends React.Component<Props> {
                 <div className={styles.reviewsContainer}>
                     <hr className={styles.hr} />
                     <div className={styles.itemDescription}>Рейтинг</div>
-                    {this.props.user && <Raiting movie={movie.name} user={this.props.user} />}
+                    <Raiting movie={movie.name} />
                 </div>
                 <div className={styles.trailer}>
                     <h2 style={{ marginBottom: "20px" }}>Трейлер</h2>

@@ -40,7 +40,8 @@ export function logOutUser() {
     return (dispatch: Dispatch) => {
         ApiClient.logOutUser();
         dispatch({
-            type: Actions.LOGOUT_USER
+            type: Actions.LOGOUT_USER,
+            user: null
         });
     }
 }
