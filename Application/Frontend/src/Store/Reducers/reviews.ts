@@ -1,7 +1,7 @@
-import { Actions } from "../Actions/reviews";
-import { Review } from 'components/MoviePage/ReviewItem/ReviewItem';
+import { Actions, ReviewsActions } from "../Actions/reviews";
+import { Review } from 'components/Types';
 
-export function reviews(state = {}, action: { type: Actions, data: { movie?: string, reviews?: [], id?: number, text?: string } }) {
+export function reviews(state = {}, action: ReviewsActions) {
     switch (action.type) {
         case Actions.SEND_MOVIE_REVIEW: {
             const oldList = state[action.data.movie] || [];

@@ -7,10 +7,6 @@ import { Actions } from 'Store/Actions/Actions';
 
 type MappedDispatchProps = Pick<Props, "logInUser" | "registerAndLoginUser">;
 
-const mapStateToProps = (state: Store): {} => {
-    return {};
-}
-
 const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): MappedDispatchProps => {
     return {
         logInUser: (email: string, password: string) => dispatch(logInUser(email, password)),
@@ -18,4 +14,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): Mapp
     }
 }
 
-export const FormsContainer = connect(mapStateToProps, mapDispatchToProps)(Form);
+export const FormsContainer = connect(() => { }, mapDispatchToProps)(Form);

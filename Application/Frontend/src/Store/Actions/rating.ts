@@ -1,5 +1,6 @@
 import ApiClient from "../../Api/ApiClient";
-import { Dispatch } from 'redux';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { Store } from 'Store/Store';
 
 export enum Actions {
     SET_USER_RATING = "SET_USER_RATING",
@@ -7,8 +8,16 @@ export enum Actions {
     GET_MOVIE_RATING = "GET_MOVIE_RATING",
 }
 
-export function getMovieRating(movie: string) {
-    return async (dispatch: Dispatch) => {
+export type RatingActions =
+    { type: Actions.GET_MOVIE_RATING, ratingInfo: { movie: string, userMark: number, averageRating: { rating: number; count: number } } }
+    | { type: Actions.DELETE_USER_RATING, ratingInfo: { movie: string, averageRating: { rating: number; count: number } } }
+    | { type: Actions.SET_USER_RATING, ratingInfo: { movie: string, averageRating: { rating: number; count: number }, userMark: number } };
+
+type MyThunkAction<Res> = ThunkAction<Res, Store, null, RatingActions>;
+type MyThunkDispatch = ThunkDispatch<Store, null, RatingActions>;
+
+export function getMovieRating(movie: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const averageRating = await ApiClient.getMovieRating(movie);
             try {
@@ -23,8 +32,8 @@ export function getMovieRating(movie: string) {
     }
 }
 
-export function deleteUserRating(movie: string) {
-    return async (dispatch: Dispatch) => {
+export function deleteUserRating(movie: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             await ApiClient.deleteUserRating(movie);
             try {
@@ -39,8 +48,8 @@ export function deleteUserRating(movie: string) {
     }
 }
 
-export function setUserRating(mark: number, movie: string) {
-    return async (dispatch: Dispatch) => {
+export function setUserRating(mark: number, movie: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             await ApiClient.setUserRating(mark, movie);
             try {

@@ -1,7 +1,6 @@
-import { Actions } from "../Actions/users";
-import { User } from 'components/Types';
+import { Actions, UserActions } from "../Actions/users";
 
-export function user(state = null, action: { type: Actions, user: User | null }) {
+export function user(state = null, action: UserActions) {
     switch (action.type) {
         case Actions.LOGIN_USER:
         case Actions.FETCH_USER_BY_TOKEN:

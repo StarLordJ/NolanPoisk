@@ -1,5 +1,7 @@
-import ApiClient from "../../Api/ApiClient"
-import { Dispatch } from 'redux';
+import ApiClient from "../../Api/ApiClient";
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { Store } from 'Store/Store';
+import { User } from 'components/Types';
 
 export enum Actions {
     FETCH_USER_BY_TOKEN = "FETCH_USER_BY_TOKEN",
@@ -8,8 +10,16 @@ export enum Actions {
     REGISTER_AND_LOGIN_USER = "REGISTER_AND_LOGIN_USER"
 }
 
-export function checkUserIsLogin(token: string) {
-    return async (dispatch: Dispatch) => {
+export type UserActions = { type: Actions.FETCH_USER_BY_TOKEN, user: User }
+    | { type: Actions.LOGIN_USER, user: User }
+    | { type: Actions.LOGOUT_USER, user: null }
+    | { type: Actions.REGISTER_AND_LOGIN_USER, user: User };
+
+type MyThunkAction<Res> = ThunkAction<Res, Store, null, UserActions>;
+type MyThunkDispatch = ThunkDispatch<Store, null, UserActions>;
+
+export function checkUserIsLogin(token: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const user = await ApiClient.checkUserIsLogin(token);
             dispatch({
@@ -22,8 +32,8 @@ export function checkUserIsLogin(token: string) {
     }
 }
 
-export function logInUser(email: string, password: string) {
-    return async (dispatch: Dispatch) => {
+export function logInUser(email: string, password: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const user = await ApiClient.authorizeUser(email, password);
             dispatch({
@@ -36,8 +46,8 @@ export function logInUser(email: string, password: string) {
     }
 }
 
-export function logOutUser() {
-    return async (dispatch: Dispatch) => {
+export function logOutUser(): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         ApiClient.logOutUser();
         dispatch({
             type: Actions.LOGOUT_USER,
@@ -46,8 +56,8 @@ export function logOutUser() {
     }
 }
 
-export function registerAndLoginUser(name: string, email: string, password: string) {
-    return async (dispatch: Dispatch) => {
+export function registerAndLoginUser(name: string, email: string, password: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const response = await ApiClient.registerUser(name, email, password);
 

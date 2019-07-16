@@ -1,6 +1,6 @@
-import { Actions } from "../Actions/rating";
+import { Actions, RatingActions } from "../Actions/rating";
 
-export function ratings(state = {}, action: { type: Actions, ratingInfo: { movie: string, userMark: number, averageRating: { count: number, mark: number } } }) {
+export function ratings(state = {}, action: RatingActions) {
     switch (action.type) {
         case Actions.DELETE_USER_RATING:
         case Actions.GET_MOVIE_RATING:

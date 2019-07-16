@@ -1,5 +1,7 @@
 import ApiClient from "../../Api/ApiClient";
-import { Dispatch } from 'redux';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { Store } from 'Store/Store';
+import { Review } from 'components/Types';
 
 export enum Actions {
     SEND_MOVIE_REVIEW = "SEND_MOVIE_REVIEW",
@@ -8,8 +10,17 @@ export enum Actions {
     UPDATE_MOVIE_REVIEW = "UPDATE_MOVIE_REVIEW"
 }
 
-export function sendMovieReview(name: string, text: string, cb: (status: boolean) => void) {
-    return async (dispatch: Dispatch) => {
+export type ReviewsActions =
+    { type: Actions.SEND_MOVIE_REVIEW, data: { movie: string, reviews: Review[] } }
+    | { type: Actions.GET_MOVIE_REVIEWS, data: { movie: string, reviews: Review[] } }
+    | { type: Actions.DELETE_MOVIE_REVIEW, data: { movie: string, id: number } }
+    | { type: Actions.UPDATE_MOVIE_REVIEW, data: { movie: string, id: number, text: string } };
+
+type MyThunkAction<Res> = ThunkAction<Res, Store, null, ReviewsActions>;
+type MyThunkDispatch = ThunkDispatch<Store, null, ReviewsActions>;
+
+export function sendMovieReview(name: string, text: string, cb: (status: boolean) => void): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const response = await ApiClient.sendMovieReview(name, text);
             if (response.status === 200) {
@@ -25,8 +36,8 @@ export function sendMovieReview(name: string, text: string, cb: (status: boolean
     }
 }
 
-export function getMovieReviews(name: string) {
-    return async (dispatch: Dispatch) => {
+export function getMovieReviews(name: string): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const response = await ApiClient.getMovieReviews(name);
             dispatch({ type: Actions.GET_MOVIE_REVIEWS, data: { movie: name, reviews: response } });
@@ -36,8 +47,8 @@ export function getMovieReviews(name: string) {
     }
 }
 
-export function deleteMovieReview(name: string, id: number) {
-    return async (dispatch: Dispatch) => {
+export function deleteMovieReview(name: string, id: number): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const response = await ApiClient.deleteReview(id);
             if (response.status === 200) {
@@ -49,8 +60,8 @@ export function deleteMovieReview(name: string, id: number) {
     }
 }
 
-export function updateMovieReview(name: string, id: number, text: string, cb: (status: boolean) => void) {
-    return async (dispatch: Dispatch) => {
+export function updateMovieReview(name: string, id: number, text: string, cb: (status: boolean) => void): MyThunkAction<Promise<void>> {
+    return async (dispatch: MyThunkDispatch): Promise<void> => {
         try {
             const response = await ApiClient.updateMovieReview(id, text);
             if (response.status === 200) {
