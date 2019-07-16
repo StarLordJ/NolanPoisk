@@ -58,7 +58,7 @@ export class ReviewItem extends React.Component<Props, State> {
                         <div>{review.date}</div>
                         <div>{review.text}</div>
                     </React.Fragment> :
-                    <ReviewForm defaultText={this.props.review.text} width={800} movie={this.props.movie} updateMovieReview={text => {
+                    <ReviewForm defaultText={review.text} width={800} movie={this.props.movie} updateMovieReview={text => {
                         this.props.updateMovieReview(text, (status: boolean) => {
                             if (status) {
                                 this.setState({ isEditing: false })
