@@ -8,13 +8,13 @@ import { Actions } from 'Store/Actions/Actions';
 type MappedStateProps = Pick<Props, "movies">;
 type MappedDispatchProps = Pick<Props, "getMovies">;
 
-const mapStateToProps = (state: Store): MappedStateProps => {
+const mapStateToProps = (state: Store.State): MappedStateProps => {
     return {
-        movies: state.movies,
+        movies: state.movies.allMovies,
     }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): MappedDispatchProps => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store.State, null, Actions>): MappedDispatchProps => {
     return {
         getMovies: () => dispatch(getMovies()),
     }

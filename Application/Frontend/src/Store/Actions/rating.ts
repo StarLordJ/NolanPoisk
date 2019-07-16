@@ -10,11 +10,11 @@ export enum Actions {
 
 export type RatingActions =
     { type: Actions.GET_MOVIE_RATING, ratingInfo: { movie: string, userMark: number, averageRating: { rating: number; count: number } } }
-    | { type: Actions.DELETE_USER_RATING, ratingInfo: { movie: string, averageRating: { rating: number; count: number } } }
+    | { type: Actions.DELETE_USER_RATING, ratingInfo: { movie: string, averageRating: { rating: number; count: number }, userMark: number } }
     | { type: Actions.SET_USER_RATING, ratingInfo: { movie: string, averageRating: { rating: number; count: number }, userMark: number } };
 
-type MyThunkAction<Res> = ThunkAction<Res, Store, null, RatingActions>;
-type MyThunkDispatch = ThunkDispatch<Store, null, RatingActions>;
+type MyThunkAction<Res> = ThunkAction<Res, Store.State, null, RatingActions>;
+type MyThunkDispatch = ThunkDispatch<Store.State, null, RatingActions>;
 
 export function getMovieRating(movie: string): MyThunkAction<Promise<void>> {
     return async (dispatch: MyThunkDispatch): Promise<void> => {
@@ -38,7 +38,7 @@ export function deleteUserRating(movie: string): MyThunkAction<Promise<void>> {
             await ApiClient.deleteUserRating(movie);
             try {
                 const averageRating = await ApiClient.getMovieRating(movie);
-                dispatch({ type: Actions.DELETE_USER_RATING, ratingInfo: { averageRating, movie } })
+                dispatch({ type: Actions.DELETE_USER_RATING, ratingInfo: { averageRating, movie, userMark: 0 } })
             } catch (er) {
                 console.log(er);
             }

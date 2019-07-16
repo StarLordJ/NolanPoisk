@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-const root = document.getElementById("root");
+// @ts-ignore
+const root: HTMLDivElement = document.getElementById("root");
 
 interface Props {
     children: JSX.Element;

@@ -15,8 +15,8 @@ export type UserActions = { type: Actions.FETCH_USER_BY_TOKEN, user: User }
     | { type: Actions.LOGOUT_USER, user: null }
     | { type: Actions.REGISTER_AND_LOGIN_USER, user: User };
 
-type MyThunkAction<Res> = ThunkAction<Res, Store, null, UserActions>;
-type MyThunkDispatch = ThunkDispatch<Store, null, UserActions>;
+type MyThunkAction<Res> = ThunkAction<Res, Store.State, null, UserActions>;
+type MyThunkDispatch = ThunkDispatch<Store.State, null, UserActions>;
 
 export function checkUserIsLogin(token: string): MyThunkAction<Promise<void>> {
     return async (dispatch: MyThunkDispatch): Promise<void> => {

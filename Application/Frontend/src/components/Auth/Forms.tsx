@@ -37,9 +37,9 @@ export class Form extends React.Component<Props, State> {
         )
     }
 
-    private handleName = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ name: event.target.value })
-    private handleEmail = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ email: event.target.value })
-    private handlePassword = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ password: event.target.value })
+    private handleName = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ name: (event.target as HTMLInputElement).value })
+    private handleEmail = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ email: (event.target as HTMLInputElement).value })
+    private handlePassword = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({ password: (event.target as HTMLInputElement).value })
 
     private handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>): void => {
         event.preventDefault();

@@ -1,5 +1,4 @@
-import { Movie } from "components/MovieItem/MovieItem";
-import { Review } from "components/MoviePage/ReviewItem/ReviewItem"
+import { MovieShortInfo, MoviePageInfo, Review } from "components/Types";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { User } from 'components/Types';
 
@@ -15,12 +14,12 @@ interface QueryOptions {
 export class ApiClient {
     private user: User | null = null;
 
-    public getAllMovies = async (): Promise<Movie[]> => {
-        return await this.get<Movie[]>("/api/movies");
+    public getAllMovies = async (): Promise<MovieShortInfo[]> => {
+        return await this.get<MovieShortInfo[]>("/api/movies");
     };
 
-    public getMovieInfo = async (movie: string): Promise<Movie> => {
-        return await this.get<Movie>("/api/movie", { params: { name: movie } });
+    public getMovieInfo = async (movie: string): Promise<MoviePageInfo> => {
+        return await this.get<MoviePageInfo>("/api/movie", { params: { name: movie } });
     };
 
     public getMovieReviews = async (movie: string): Promise<Review[]> => {

@@ -29,9 +29,15 @@ export interface MovieShortInfo {
     posterUrl: string;
 }
 
-export interface MovieAdditionalInfo {
+export interface MoviePageInfo {
+    name: string;
     cast: string[];
     tagline: string;
+    genre: string[];
     description: string;
     trailerUrl: string;
+    year: number;
+    posterUrl: string;
 }
+
+export type MovieInfo = MovieShortInfo | MovieShortInfo & MoviePageInfo;

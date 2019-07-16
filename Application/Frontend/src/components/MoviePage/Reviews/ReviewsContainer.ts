@@ -9,14 +9,14 @@ type OwnProps = Pick<Props, "movie">;
 type MappedStateProps = Pick<Props, "reviews">;
 type MappedDispatchProps = Pick<Props, "getMovieReviews" | "deleteReview">;
 
-const mapStateToProps = (state: Store, ownProps: OwnProps): MappedStateProps => {
+const mapStateToProps = (state: Store.State, ownProps: OwnProps): MappedStateProps => {
     const { movie } = ownProps;
     const reviews = state.reviews[movie];
 
     return { reviews };
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>, ownProps: OwnProps): MappedDispatchProps => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store.State, null, Actions>, ownProps: OwnProps): MappedDispatchProps => {
     const { movie } = ownProps;
 
     return {

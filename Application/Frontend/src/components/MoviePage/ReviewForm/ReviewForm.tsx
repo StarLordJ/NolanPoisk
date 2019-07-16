@@ -1,12 +1,13 @@
 import * as React from "react";
-import { User } from '../../Types';
 
 import styles from "./style.less";
 
 export interface Props {
     movie: string;
-    user: User | null;
-    sendMovieReview: (name: string, text: string, cb: (status: boolean) => void) => void;
+    width?: number;
+    sendMovieReview?: (name: string, text: string, cb: (status: boolean) => void) => void;
+    updateMovieReview?: (text: string) => void;
+    defaultText?: string;
 }
 
 interface State {
@@ -14,29 +15,32 @@ interface State {
 }
 
 export class ReviewForm extends React.Component<Props, State> {
-    public state: State = { value: "" };
+    public state: State = { value: this.props.defaultText || "" };
 
     public handleChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-        this.setState({ value: event.target.value });
+        this.setState({ value: (event.target as HTMLTextAreaElement).value });
     }
 
     public handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
-        this.props.sendMovieReview(this.props.movie, this.state.value, (status) => {
-            if (status) {
-                this.setState({ value: "" });
-            }
-        });
+        if (this.props.sendMovieReview) {
+            this.props.sendMovieReview(this.props.movie, this.state.value, (status) => {
+                if (status) {
+                    this.setState({ value: "" });
+                }
+            });
+        }
+        if (this.props.updateMovieReview) {
+            this.props.updateMovieReview(this.state.value)
+        }
     }
 
     render() {
-        const { user } = this.props;
-
-        return user ? (
+        return (
             <form onSubmit={this.handleSubmit} className={styles.form}>
-                <textarea className={styles.textarea} value={this.state.value} onChange={this.handleChange} />
+                <textarea value={this.state.value} className={styles.textarea} onChange={this.handleChange} style={{ width: `${this.props.width}px` }} />
                 <button className={styles.button} type="submit">Отправить</button>
             </form>
-        ) : (<div>Авторизуйтесь или зарегистрируйтесь, чтобы оставить рецензию на фильм!</div>)
+        )
     }
 }

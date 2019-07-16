@@ -1,27 +1,12 @@
 import { MoviesActions, Actions } from "../Actions/movies";
-import { MovieShortInfo, MovieAdditionalInfo } from 'components/Types';
+import { Store } from 'Store/Store';
 
-type MovieInfo = MovieShortInfo | MovieShortInfo & MovieAdditionalInfo;
-
-export function movies(state: MovieInfo[] = [], action: MoviesActions) {
+export function movies(state: Store.movies = { allMovies: [] }, action: MoviesActions): Store.movies {
     switch (action.type) {
         case Actions.GET_ALL_MOVIES:
-            if (state.length === 1) {
-                const movie = state[0];
-                const index = action.movies.findIndex(({ name }: MovieInfo) => name === movie.name);
-
-                return [...action.movies.slice(0, index), { ...movie, ...action.movies[index] }, ...action.movies.slice(index + 1)];
-            }
-            return action.movies;
-        case Actions.UPDATE_MOVIE_INFO:
-            const movies = state;
-
-            if (!movies.length) {
-                return action.movies;
-            }
-            const index = state.findIndex(({ name }: MovieInfo) => action.movies[0].name === name)
-
-            return [...state.slice(0, index), { ...action.movies[0], ...state[index] }, ...state.slice(index + 1)];
+            return { ...state, allMovies: action.movies };
+        case Actions.GET_MOVIE_FULL_INFO:
+            return { ...state, currentMovie: action.movie };
         default:
             return state;
     }

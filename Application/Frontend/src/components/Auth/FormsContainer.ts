@@ -7,7 +7,7 @@ import { Actions } from 'Store/Actions/Actions';
 
 type MappedDispatchProps = Pick<Props, "logInUser" | "registerAndLoginUser">;
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): MappedDispatchProps => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store.State, null, Actions>): MappedDispatchProps => {
     return {
         logInUser: (email: string, password: string) => dispatch(logInUser(email, password)),
         registerAndLoginUser: (name: string, email: string, password: string) => dispatch(registerAndLoginUser(name, email, password)),

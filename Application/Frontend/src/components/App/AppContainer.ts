@@ -8,12 +8,12 @@ import { Actions } from 'Store/Actions/Actions';
 type MappedStateProps = Pick<Props, "user">;
 type MappedDispatchProps = Pick<Props, "checkUserIsLogin">;
 
-const mapStateToProps = (state: Store): MappedStateProps => {
+const mapStateToProps = (state: Store.State): MappedStateProps => {
     const user = state.user || null;
     return { user };
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<Store, null, Actions>): MappedDispatchProps => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<Store.State, null, Actions>): MappedDispatchProps => {
     return {
         checkUserIsLogin: (token: string) => dispatch(checkUserIsLogin(token))
     }

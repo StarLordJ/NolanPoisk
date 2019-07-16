@@ -2,7 +2,7 @@ import * as React from "react";
 import { Reviews } from "./Reviews";
 import { ReviewForm } from "./ReviewForm";
 import { Rating } from './Rating';
-import { MovieShortInfo, MovieAdditionalInfo } from 'components/Types';
+import { MoviePageInfo, User } from 'components/Types';
 
 import styles from "./style.less";
 
@@ -12,13 +12,14 @@ export interface Props {
             name: string;
         };
     },
-    movie: MovieShortInfo & MovieAdditionalInfo;
+    movie?: MoviePageInfo;
+    user: User | null;
     getMovieInfo: () => void;
 }
 
 export class MoviePage extends React.Component<Props> {
     public componentDidMount(): void {
-        if (!(this.props.movie && this.props.movie.description)) {
+        if (!this.props.movie) {
             this.props.getMovieInfo();
         }
     }
@@ -63,7 +64,7 @@ export class MoviePage extends React.Component<Props> {
                     </iframe>
                 </div>
                 <div className={styles.formContainer}>
-                    <ReviewForm movie={movie.name} />
+                    {this.props.user ? <ReviewForm movie={movie.name} /> : <div>Зарегистрируйтесь или войдите, чтобы оставить рецензию!</div>}
                 </div>
                 <div className={styles.reviewsContainer}>
                     <Reviews movie={movie.name} />

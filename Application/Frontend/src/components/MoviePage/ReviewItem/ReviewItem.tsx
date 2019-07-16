@@ -1,5 +1,6 @@
 import * as React from "react";
 import { User, Review } from '../../Types';
+import { ReviewForm } from "../ReviewForm/ReviewForm";
 
 import styles from "./style.less";
 
@@ -11,8 +12,12 @@ export interface Props {
     updateMovieReview: (text: string, cb: (status: boolean) => void) => void;
 }
 
-export class ReviewItem extends React.Component<Props> {
-    state = { isEditing: false, text: "" };
+interface State {
+    isEditing: boolean;
+}
+
+export class ReviewItem extends React.Component<Props, State> {
+    state = { isEditing: false };
 
     render() {
         return this.renderReview();
@@ -53,24 +58,14 @@ export class ReviewItem extends React.Component<Props> {
                         <div>{review.date}</div>
                         <div>{review.text}</div>
                     </React.Fragment> :
-                    <form onSubmit={this.handleSubmit} className={styles.form}>
-                        <textarea className={styles.textarea} defaultValue={review.text} onChange={this.handleChange} style={{ width: "800px" }} />
-                        <button className={styles.button} type="submit">Отправить</button>
-                    </form>}
+                    <ReviewForm defaultText={this.props.review.text} width={800} movie={this.props.movie} updateMovieReview={text => {
+                        this.props.updateMovieReview(text, (status: boolean) => {
+                            if (status) {
+                                this.setState({ isEditing: false })
+                            }
+                        })
+                    }}></ReviewForm>}
             </div>
         )
-    }
-
-    private handleChange = (e: React.SyntheticEvent) => {
-        this.setState({ text: e.target.value })
-    }
-
-    private handleSubmit = (e) => {
-        e.preventDefault();
-        this.props.updateMovieReview(this.state.text, (status: boolean) => {
-            if (status) {
-                this.setState({ isEditing: false });
-            }
-        });
     }
 }

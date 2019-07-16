@@ -47,7 +47,7 @@ export class Header extends React.Component<Props, State> {
 
     private renderUserHeader = (): JSX.Element => (
         <div className={styles.actions}>
-            <div className={styles.username}>{this.props.user.name}</div>
+            <div className={styles.username}>{this.props.user && this.props.user.name}</div>
             <div className={styles.action} onClick={this.props.logOutUser}>Выход</div>
         </div>
     )

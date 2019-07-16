@@ -16,8 +16,8 @@ export type ReviewsActions =
     | { type: Actions.DELETE_MOVIE_REVIEW, data: { movie: string, id: number } }
     | { type: Actions.UPDATE_MOVIE_REVIEW, data: { movie: string, id: number, text: string } };
 
-type MyThunkAction<Res> = ThunkAction<Res, Store, null, ReviewsActions>;
-type MyThunkDispatch = ThunkDispatch<Store, null, ReviewsActions>;
+type MyThunkAction<Res> = ThunkAction<Res, Store.State, null, ReviewsActions>;
+type MyThunkDispatch = ThunkDispatch<Store.State, null, ReviewsActions>;
 
 export function sendMovieReview(name: string, text: string, cb: (status: boolean) => void): MyThunkAction<Promise<void>> {
     return async (dispatch: MyThunkDispatch): Promise<void> => {

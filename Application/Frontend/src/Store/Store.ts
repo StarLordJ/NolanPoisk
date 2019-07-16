@@ -1,18 +1,25 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { reducers } from "./Reducers/Reducer";
-import { User, Review, RatingInfo } from 'components/Types';
-import { Movie } from 'components/MovieItem/MovieItem';
+import { User, Review, RatingInfo, MoviePageInfo, MovieShortInfo } from 'components/Types';
 
 export const store = createStore(reducers, applyMiddleware(thunk));
 
-export interface Store {
-    user: User | null,
-    movies: Movie[],
-    reviews: {
+export declare module Store {
+
+    export type user = User | null;
+    export type movies = { allMovies: MovieShortInfo[], currentMovie?: MoviePageInfo };
+    export type reviews = {
         [movieName: string]: Review[],
-    }
-    ratings: {
-        [movieName: string]: RatingInfo
+    };
+    export type ratings = {
+        [movieName: string]: RatingInfo,
+    };
+
+    export type State = {
+        user: user;
+        movies: movies;
+        reviews: reviews;
+        ratings: ratings;
     }
 }
