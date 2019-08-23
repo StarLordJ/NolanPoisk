@@ -16,10 +16,15 @@ export declare module Store {
         [movieName: string]: RatingInfo,
     };
 
+    export type toast = {
+        toastText: string[] | [];
+    }
+
     export type State = {
         user: user;
         movies: movies;
         reviews: reviews;
         ratings: ratings;
+        toast: toast;
     }
 }

@@ -3,6 +3,7 @@ import { user } from "./users";
 import { movies } from "./movies";
 import { reviews } from "./reviews";
 import { ratings } from "./rating";
+import { toast } from "./toast";
 import { Store } from 'Store/Store';
 
 export const reducers = combineReducers<Store.State>({
@@ -10,4 +11,5 @@ export const reducers = combineReducers<Store.State>({
     movies: movies,
     reviews: reviews,
     ratings: ratings,
+    toast: toast,
 });
