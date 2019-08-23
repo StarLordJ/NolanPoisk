@@ -147,8 +147,8 @@ export class DataBaseStorage {
         const d = response.rows[0];
 
         return {
-            rating: d.rating,
-            count: d.marks_count
+            rating: d.rating || 0,
+            count: d.marks_count || 0,
         }
     }
 

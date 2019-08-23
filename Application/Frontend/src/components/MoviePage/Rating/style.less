@@ -1,6 +1,14 @@
 :local {
+    .ratingContainer, .starsContainer {
+        display: flex;
+        width: fit-content;
+    }
+
+    .starsContainer {
+        flex-direction: row-reverse;
+    }
+
     .star, .colorStar {
-        display: inline-block;
         font-size: 40px;
         cursor: pointer;
         color: #bfbfbf;
@@ -10,36 +18,29 @@
         color: #247fab
     }
 
-    .colorStar:hover {
-        font-size: 45px;
-    }
-
-    .star:hover {
-        font-size: 45px;
+    .star:hover, .starContainer:hover ~ .starContainer > .star {
         color: #f69c00;
     }
 
-    .starcontainer {
-        display: inline-block;
-    }
-    .starvalue {
+    .starValue {
         text-align: center;
         font-size: 10px;
         margin-top: -5px;
     }
-    .totalCount, .rating {
-        display: inline-block;
-    }
 
-    .rating {
+    .totalRating {
         margin-left: 10px;
         font-size: 50px;
         color: #f69c00;
     }
 
-    .totalCount {
+    .totalCount, .deleteButton {
+        align-self: flex-end;
+        margin-bottom: 10px;
         margin-left: 10px;
-        margin-top: -10px;
+    }
+
+    .totalCount {
         color: #bfbfbf;
     }
 

@@ -12,38 +12,28 @@ export interface Props {
     getMovieRating: () => void;
 }
 
-export class Rating extends React.Component<Props> {
-    public componentDidMount(): void {
-        this.props.getMovieRating();
-    }
+export function Rating(props: Props) {
+    const ratingHelpBuild = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const { averageRating, userMark = 0 } = props.rating;
+    const { rating, count } = averageRating;
 
-    public componentWillReceiveProps(): void {
-        this.props.getMovieRating();
-    }
+    const handleClick = (value: number): void => props.setUserRating(value);
+    const handleOnDeleteClick = (): void => props.deleteUserRating();
 
-    private handleClick = (value: number): void => {
-        this.props.setUserRating(value);
-    }
+    React.useEffect(() => {
+        props.getMovieRating()
+    });
 
-    private handleOnDeleteClick = (): void => {
-        this.props.deleteUserRating();
-    }
-
-    render() {
-        const { averageRating, userMark = 0 } = this.props.rating;
-        const { rating, count } = averageRating;
-
-        return (
-            <div>
-                {
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => <Star key={el} value={el} onClick={this.handleClick} color={el <= userMark} />)
-                }
-                <div className={styles.rating}>{`${rating}`}</div>
-                <div className={styles.totalCount}>{`${count}`}</div>
-                {Boolean(userMark) && <div className={styles.deleteButton} onClick={this.handleOnDeleteClick}>Удалить оценку</div>}
+    return (
+        <div className={styles.ratingContainer}>
+            <div className={styles.starsContainer}>
+                {ratingHelpBuild.map(el => <Star key={el} value={el} onClick={handleClick} color={el <= userMark} />)}
             </div>
-        )
-    }
+            <div className={styles.totalRating}>{`${rating}`}</div>
+            <div className={styles.totalCount}>{`${count}`}</div>
+            {Boolean(userMark) && <div className={styles.deleteButton} onClick={handleOnDeleteClick}>Удалить оценку</div>}
+        </div>
+    )
 }
 
 interface StarProps {
@@ -52,18 +42,13 @@ interface StarProps {
     onClick: (value: number) => void;
 }
 
-class Star extends React.Component<StarProps> {
-    private handleClick = (): void => {
-        this.props.onClick(this.props.value);
-    }
+function Star(props: StarProps) {
+    const handleClick = (): void => props.onClick(props.value);
 
-    render() {
-        return (
-            <div className={styles.starcontainer}>
-                <div onClick={this.handleClick} className={this.props.color ? styles.colorStar : styles.star}>★</div>
-                <div className={styles.starvalue}>{this.props.value}</div>
-            </div>
-        )
-    }
-
+    return (
+        <div className={styles.starContainer}>
+            <div onClick={handleClick} className={props.color ? styles.colorStar : styles.star}>★</div>
+            <div className={styles.starValue}>{props.value}</div>
+        </div>
+    )
 }
