@@ -107,7 +107,7 @@ export class ApiClient {
             const response = await axios.get(this.buildQueryString(url, options.params), options.config);
             return response.data;
         } catch (e) {
-            throw Error(e);
+            throw e.response;
         }
     };
 
@@ -115,7 +115,7 @@ export class ApiClient {
         try {
             return await axios.post(url, data);
         } catch (e) {
-            throw Error(e);
+            throw e.response;
         }
     }
 

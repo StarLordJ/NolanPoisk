@@ -167,7 +167,7 @@ export class AuthController {
                 }
                 if (info !== undefined) {
                     console.log(info.message);
-                    res.send(info.message);
+                    res.status(409).send(info.message);
                 } else {
                     req.logIn(user, (err): void => {
                         res.status(200).send({ message: "Пользователь создан!" })

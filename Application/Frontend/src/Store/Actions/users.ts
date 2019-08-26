@@ -73,6 +73,7 @@ export function registerAndLoginUser(name: string, email: string, password: stri
                 }
             }
         } catch (e) {
+            // TODO: UI handler ошибок
             console.log(e);
         }
     }
