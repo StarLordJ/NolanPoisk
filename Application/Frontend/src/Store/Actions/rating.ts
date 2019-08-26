@@ -1,6 +1,7 @@
 import ApiClient from "../../Api/ApiClient";
 import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import { Store } from 'Store/Store';
+import { openToast, ToastActions } from "./toast";
 
 export enum Actions {
     SET_USER_RATING = "SET_USER_RATING",
@@ -59,7 +60,7 @@ export function setUserRating(mark: number, movie: string): MyThunkAction<Promis
                 console.log(er);
             }
         } catch (e) {
-            console.log(e);
+            dispatch(openToast(e.data) as unknown as ThunkAction<void, Store.State, null, ToastActions>);
         }
     }
 }

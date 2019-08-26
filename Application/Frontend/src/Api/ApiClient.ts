@@ -28,7 +28,7 @@ export class ApiClient {
 
     public getMovieRatingOfUser = async (movie: string): Promise<number> => {
         if (!this.user) {
-            throw Error("Авторизуйтесь!");
+            throw { data: "Авторизуйтесь" };
         }
         return await this.get<number>("/api/userRating", { params: { name: movie, email: this.user.email } });
     };
@@ -39,21 +39,21 @@ export class ApiClient {
 
     public setUserRating = async (mark: number, movie: string): Promise<void> => {
         if (!this.user) {
-            throw Error("Авторизуйтесь!");
+            throw { data: "Авторизуйтесь" };
         }
         await this.post("/api/userRating/set", { rate: mark, movie, email: this.user.email });
     };
 
     public deleteUserRating = async (movie: string): Promise<void> => {
         if (!this.user) {
-            throw Error("Авторизуйтесь!");
+            throw { data: "Авторизуйтесь" };
         }
         await this.post("/api/userRating/delete", { movie, email: this.user.email });
     };
 
     public sendMovieReview = async (movie: string, text: string): Promise<AxiosResponse> => {
         if (!this.user) {
-            throw Error("Авторизуйтесь!");
+            throw { data: "Авторизуйтесь" };
         }
         const response: AxiosResponse = await this.post("/api/review/set", {
             movie: movie,
