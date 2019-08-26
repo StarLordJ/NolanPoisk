@@ -14,6 +14,7 @@ export interface Props {
 
 export function Rating(props: Props) {
     const ratingHelpBuild = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const { user } = props;
     const { averageRating, userMark = 0 } = props.rating;
     const { rating, count } = averageRating;
 
@@ -22,7 +23,7 @@ export function Rating(props: Props) {
 
     React.useEffect(() => {
         props.getMovieRating();
-    }, [userMark]);
+    }, [userMark, user]);
 
     return (
         <div className={styles.ratingContainer}>

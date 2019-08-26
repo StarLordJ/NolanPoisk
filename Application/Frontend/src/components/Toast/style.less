@@ -1,0 +1,59 @@
+:local {
+    @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+    }
+
+    .toast {
+        width: 300px;;
+        min-height: 90px;
+        border: 1px solid #ffbd97;
+        border-radius: 10px;
+        background: #ffedbe;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .toastFadeIn {
+        animation: fadeIn 0.3s;
+    }
+
+    .toastFadeOut {
+        animation: fadeOut 0.3s;
+    }
+
+    .cross {
+        font-size: 20px;
+        cursor: pointer;
+        color: #bfbfbf;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 5px;
+    }
+
+    .cross:hover {
+        color: #6c6c6c;
+    }
+    .text {
+        margin: auto;
+        box-sizing: border-box;
+        padding: 15px;
+    }
+}

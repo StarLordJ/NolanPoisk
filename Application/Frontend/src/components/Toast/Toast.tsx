@@ -1,11 +1,15 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { Store } from 'Store/Store';
+import { Modal } from "./Modal";
 import { closeToast } from "../../Store/Actions/toast";
 import { Dispatch } from "redux";
 
+import { Store } from "../../Store/Store";
+
+import styles from "./style.less";
+
 interface ToastsContainerProps {
-    toasts: string[] | [];
+    toasts: string[];
 }
 
 interface ToastProps {
@@ -14,21 +18,38 @@ interface ToastProps {
     close: () => void;
 }
 
-const Toast = (props: ToastProps) => (<div>
-    {props.text}
-    <button onClick={props.close}>Закрыть</button>
-</div>);
+const Toast = (props: ToastProps) => {
+    const [classname, change] = React.useState(styles.toastFadeIn);
+
+    const close = () => {
+        change(styles.toastFadeOut);
+        setTimeout(props.close, 250);
+    }
+
+    React.useEffect(() => {
+        setTimeout(close, 5000);
+    }, [])
+
+    return (
+        <div className={styles.toast + " " + classname}>
+            <div onClick={close} className={styles.cross}>✖</div>
+            <div className={styles.text}>{props.text}</div>
+        </div>
+    )
+};
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: { id: number }) => ({
     close: () => dispatch(closeToast(ownProps.id))
 });
 
-const ToastContainer = connect({}, mapDispatchToProps)(Toast);
+const ToastContainer = connect(() => ({}), mapDispatchToProps)(Toast);
 
-const Toasts = (props: ToastsContainerProps) => props.toasts.length ? props.toasts.map((text, id) => <ToastContainer text={text} id={id} />) : null;
+const Toasts = (props: ToastsContainerProps) => (<div className={styles.toastsContainer}>{Boolean(props.toasts.length) && props.toasts.slice().map((text, id) => <ToastContainer text={text} id={id} key={id} />)}</div>);
 
 const mapStateToProps = (state: Store.State) => ({
     toasts: state.toast.toastText
 });
 
-export const ToastsContainer = connect(mapStateToProps)(Toasts);
+const ToastConnected = connect(mapStateToProps)(Toasts);
+
+export const ToastsContainer = () => <Modal><ToastConnected /></Modal>;

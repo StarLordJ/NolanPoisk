@@ -1,6 +1,7 @@
 import React from "react";
 import { MoviesList } from "../MoviesList";
 import { Header } from "../Header"
+import { ToastsContainer } from "../Toast/Toast";
 import { Router, Route } from "react-router";
 import { createHashHistory } from "history";
 import { MoviePage } from '../MoviePage';
@@ -19,6 +20,7 @@ export class App extends React.Component<Props> {
     render() {
         return (
             <Router history={createHashHistory()}>
+                <ToastsContainer />
                 <Header />
                 <Route exact path="/" component={MoviesList} />
                 <Route path="/movie/:name" component={MoviePage} />

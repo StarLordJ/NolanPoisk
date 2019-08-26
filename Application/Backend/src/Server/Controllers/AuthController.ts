@@ -140,7 +140,7 @@ export class AuthController {
                 }
                 if (info !== undefined) {
                     console.log(info.message);
-                    res.send(info.message);
+                    res.status(409).send(info.message);
                 } else {
                     req.logIn(user, async (err): Promise<void> => {
                         const token = jwt.sign({ id: user.email }, jwtConfig.secret);

@@ -6,7 +6,7 @@ import { openToast, ToastActions } from "./toast";
 export enum Actions {
     SET_USER_RATING = "SET_USER_RATING",
     DELETE_USER_RATING = "DELETE_USER_RATING",
-    GET_MOVIE_RATING = "GET_MOVIE_RATING",
+    GET_MOVIE_RATING = "GET_MOVIE_RATING"
 }
 
 export type RatingActions =

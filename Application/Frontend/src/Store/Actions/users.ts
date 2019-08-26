@@ -17,7 +17,7 @@ export type UserActions = { type: Actions.FETCH_USER_BY_TOKEN, user: User }
     | { type: Actions.REGISTER_AND_LOGIN_USER, user: User }
 
 
-type MyThunkAction = ThunkAction<void, Store.State, null, UserActions>;
+type MyThunkAction = ThunkAction<Promise<void>, Store.State, null, UserActions>;
 type MyThunkDispatch = ThunkDispatch<Store.State, null, UserActions>;
 
 export function checkUserIsLogin(token: string): MyThunkAction {
@@ -43,7 +43,7 @@ export function logInUser(email: string, password: string): MyThunkAction {
                 user,
             })
         } catch (e) {
-            console.log(e);
+            dispatch(openToast(e.data) as unknown as ThunkAction<void, Store.State, null, ToastActions>);
         }
     }
 }
