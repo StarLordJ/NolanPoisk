@@ -21,8 +21,8 @@ export function Rating(props: Props) {
     const handleOnDeleteClick = (): void => props.deleteUserRating();
 
     React.useEffect(() => {
-        props.getMovieRating()
-    });
+        props.getMovieRating();
+    }, [userMark]);
 
     return (
         <div className={styles.ratingContainer}>
