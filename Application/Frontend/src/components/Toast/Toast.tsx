@@ -20,6 +20,7 @@ interface ToastProps {
 
 const Toast = (props: ToastProps) => {
     const [classname, change] = React.useState(styles.toastFadeIn);
+    let timeOutID = 0;
 
     const close = () => {
         change(styles.toastFadeOut);
@@ -27,7 +28,9 @@ const Toast = (props: ToastProps) => {
     }
 
     React.useEffect(() => {
-        setTimeout(close, 5000);
+        clearTimeout(timeOutID);
+        console.log("here!")
+        timeOutID = window.setTimeout(close, 5000);
     }, [])
 
     return (
