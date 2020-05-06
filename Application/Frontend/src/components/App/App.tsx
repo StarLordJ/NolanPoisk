@@ -1,9 +1,10 @@
 import React from "react";
 import { MoviesList } from "../MoviesList";
-import { Header } from "../Header";
+import { Header } from "../Header"
 import { ToastsContainer } from "../Toast/Toast";
 import { Router, Route } from "react-router";
-import { MoviePage } from "../MoviePage";
+import { createHashHistory } from "history";
+import { MoviePage } from '../MoviePage';
 import { User } from "../Types";
 
 export interface Props {
@@ -18,13 +19,13 @@ export class App extends React.Component<Props> {
 
     render() {
         return (
-            <Router>
+            <Router history={createHashHistory()}>
                 <ToastsContainer />
                 <Header />
                 <Route exact path="/" component={MoviesList} />
                 <Route path="/movie/:name" component={MoviePage} />
             </Router>
-        );
+        )
     }
 
     private checkIsLogin = (): void => {
@@ -35,5 +36,5 @@ export class App extends React.Component<Props> {
         } else {
             this.props.checkUserIsLogin(accessString);
         }
-    };
+    }
 }
